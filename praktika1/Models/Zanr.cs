@@ -7,7 +7,7 @@ namespace praktika1.Models
         [Key]
         public int Id { get; set; }
         [Required]
-        [StringLength(100)]
+        [StringLength(100, ErrorMessage = "Naziv ne sme biti duze od 100 karaktera.")]
         public string Naziv { get; set; }
         public List<Film> Filmovi { get; set; } = new List<Film>();
     }
