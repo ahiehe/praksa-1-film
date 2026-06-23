@@ -10,7 +10,10 @@
 <div class="container mt-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1 class="display-5">Lista filmova</h1>
-        <a class="btn btn-primary" asp-action="CreateFilm">Dodaj novi film</a>
+         @if (Context.Session.GetString("Role") == "Admin")
+         {
+            <a class="btn btn-primary" asp-action="CreateFilm">Dodaj novi film</a>
+         }
     </div>
 
     @if (Model != null && Model.Any())
@@ -52,10 +55,13 @@
                         </div>
                         <div class="card-footer bg-light d-flex justify-content-between align-items-center py-2">
                             <a asp-action="DetailsFilm" asp-route-id="@film.Id" class="btn btn-outline-primary btn-sm">Detalji</a>
-                            <form asp-action="DeleteFilm" asp-route-id="@film.Id" method="post"
-                                  onsubmit="return confirm('Da li ste sigurni da želite da obrišete ovaj film?');" class="d-inline">
-                                <button type="submit" class="btn btn-outline-danger btn-sm">Obrisi</button>
-                            </form>
+                            @if (Context.Session.GetString("Role") == "Admin")
+                            {
+                                <form asp-action="DeleteFilm" asp-route-id="@film.Id" method="post"
+                                onsubmit="return confirm('Da li ste sigurni da želite da obrišete ovaj film?');" class="d-inline">
+                                    <button type="submit" class="btn btn-outline-danger btn-sm">Obrisi</button>
+                                </form>
+                            }
                         </div>
                     </div>
                 </div>

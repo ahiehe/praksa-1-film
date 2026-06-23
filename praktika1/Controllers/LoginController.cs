@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using praktika1.Data;
+using praktika1.Filters;
 using praktika1.Models;
 
 namespace praktika1.Controllers
@@ -25,14 +26,22 @@ namespace praktika1.Controllers
             return _passwordHasher.VerifyHashedPassword(null, hash, password) == PasswordVerificationResult.Success;
         }
 
+        [NotLogedInRequired]
         public async Task<IActionResult> Login()
         {
             return View();
         }
 
+        [NotLogedInRequired]
         public async Task<IActionResult> Register()
         {
             return View();
+        }
+
+        public async Task<IActionResult> Logout()
+        {
+            HttpContext.Session.Clear();
+            return RedirectToAction("Index", "Home");
         }
 
         [HttpPost]
@@ -89,7 +98,7 @@ namespace praktika1.Controllers
 
             if (user == null || !VerifyPassword(user.PasswordHash, podatke.Password))
             {
-                ModelState.AddModelError(string.Empty, "Neispravno korisničko ime ili lozinka.");
+                ModelState.AddModelError("Password", "Neispravno ime/email ili lozinka.");
                 return View(podatke);
             }
 
