@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using praktika1.Data;
+using praktika1.Filters;
 using praktika1.Models;
 using System;
 using System.Diagnostics;
@@ -18,6 +19,7 @@ namespace praktika1.Controllers
         {
             _context = context;
         }
+
 
         public async Task<IActionResult> Index(int page = 1)
         {
@@ -46,8 +48,10 @@ namespace praktika1.Controllers
             return View(filmovi);
         }
 
+        [AdminRequired]
         public async Task<IActionResult> CreateFilm()
         {
+
             var zanrovi = await _context.Zanrovi.ToListAsync();
             ViewData["ZanrId"] = new SelectList(zanrovi, "Id", "Naziv");
 
@@ -58,8 +62,10 @@ namespace praktika1.Controllers
         }
 
         [HttpPost]
+        [AdminRequired]
         public async Task<IActionResult> CreateFilm([Bind("Naziv,GodinaIzdanja,ZanrId,Opis")] Film film, int[] izabraniReziseri)
         {
+            
 
             if (izabraniReziseri == null || izabraniReziseri.Length == 0)
             {
@@ -101,8 +107,11 @@ namespace praktika1.Controllers
             return View(film);
         }
 
+        [AdminRequired]
         public async Task<IActionResult> UpdateFilm(int id)
         {
+            
+
             var film = await _context.Filmovi
                    .Include(f => f.Zanr)
                    .Include(f => f.Reziseri)
@@ -127,8 +136,10 @@ namespace praktika1.Controllers
 
 
         [HttpPost]
+        [AdminRequired]
         public async Task<IActionResult> UpdateFilm(int id, [Bind("Id,Naziv,GodinaIzdanja,ZanrId,Opis")] Film film, int[] izabraniReziseri)
         {
+
             if (id != film.Id) return NotFound();
 
             if (izabraniReziseri == null || izabraniReziseri.Length == 0)
@@ -180,8 +191,10 @@ namespace praktika1.Controllers
         }
 
         [HttpPost]
+        [AdminRequired]
         public async Task<IActionResult> DeleteFilm(int id)
         {
+            
             var film = await _context.Filmovi.FindAsync(id);
 
             if (film != null)
