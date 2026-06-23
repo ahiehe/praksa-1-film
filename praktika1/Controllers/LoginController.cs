@@ -15,9 +15,14 @@ namespace praktika1.Controllers
         }
 
         private readonly PasswordHasher<User> _passwordHasher = new PasswordHasher<User>();
-        public string HashPassword(User user, string password)
+        private string HashPassword(string password)
         {
-            return _passwordHasher.HashPassword(user, password);
+            return _passwordHasher.HashPassword(null, password);
+        }
+
+        private bool VerifyPassword(string hash, string password)
+        {
+            return _passwordHasher.VerifyHashedPassword(null, hash, password) == PasswordVerificationResult.Success;
         }
 
         public async Task<IActionResult> Login()
@@ -33,11 +38,6 @@ namespace praktika1.Controllers
         [HttpPost]
         public async Task<IActionResult> Register(RegisterValidationModel podatke)
         {
-            if (!ModelState.IsValid)
-            {
-                return View(podatke);
-            }
-
             bool usernameExists = await _context.Users.AnyAsync(u => u.Username == podatke.Username);
             if (usernameExists)
             {
@@ -58,15 +58,44 @@ namespace praktika1.Controllers
             User newUser = new User
             {
                 Username = podatke.Username,
-                Email = podatke.Email
-                
+                Email = podatke.Email,
+                Role = Role.User
             };
 
-            newUser.PasswordHash = HashPassword(newUser, podatke.Password);
+            newUser.PasswordHash = HashPassword(podatke.Password);
 
             _context.Users.Add(newUser);
             await _context.SaveChangesAsync();
 
+
+            HttpContext.Session.SetInt32("UserId", newUser.Id);
+            HttpContext.Session.SetString("Username", newUser.Username);
+            HttpContext.Session.SetString("Role", newUser.Role.ToString());
+
+
+            return RedirectToAction("Index", "Home");
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> Login(LoginValidationModel podatke)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(podatke);
+            }
+
+            User user = await _context.Users.FirstOrDefaultAsync(u => u.Username == podatke.UsernameOrEmail || u.Email == podatke.UsernameOrEmail);
+
+            if (user == null || !VerifyPassword(user.PasswordHash, podatke.Password))
+            {
+                ModelState.AddModelError(string.Empty, "Neispravno korisničko ime ili lozinka.");
+                return View(podatke);
+            }
+
+            HttpContext.Session.SetInt32("UserId", user.Id);
+            HttpContext.Session.SetString("Username", user.Username);
+            HttpContext.Session.SetString("Role", user.Role.ToString());
 
             return RedirectToAction("Index", "Home");
         }
