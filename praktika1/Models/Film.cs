@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace praktika1.Models
@@ -8,9 +9,11 @@ namespace praktika1.Models
         [Key]
         public int Id { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Film mora imati naziv")]
         [StringLength(250)]
         public string Naziv { get; set; }
+
+        [StringLength(2500, ErrorMessage = "Opis ne sme biti duze od 2500 karaktera.")]
         public string Opis { get; set; }
         public int GodinaIzdanja { get; set; }
 

@@ -6,6 +6,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddSession();
 builder.Services.AddDbContext<MyAppContext>(options =>
     options.UseSqlite(connectionString));
 
@@ -94,6 +96,7 @@ app.UseRouting();
 app.UseAuthorization();
 
 app.MapStaticAssets();
+app.UseSession();
 
 app.MapControllerRoute(
     name: "default",
