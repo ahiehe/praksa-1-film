@@ -1,3 +1,5 @@
+using MainProjectOOPIII3.Services.Account;
+using MainProjectOOPIII3.Services.Film;
 using Microsoft.EntityFrameworkCore;
 using praktika1.Data;
 using praktika1.Models;
@@ -10,6 +12,9 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddSession();
 builder.Services.AddDbContext<MyAppContext>(options =>
     options.UseSqlite(connectionString));
+
+builder.Services.AddScoped<IFilmService, FilmService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();

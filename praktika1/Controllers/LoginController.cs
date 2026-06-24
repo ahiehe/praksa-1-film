@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using MainProjectOOPIII3.Services;
+using MainProjectOOPIII3.Services.Account;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using praktika1.Data;
@@ -9,10 +11,10 @@ namespace praktika1.Controllers
 {
     public class LoginController : Controller
     {
-        private MyAppContext _context;
-        public LoginController(MyAppContext context)
+        private IAuthService _authService;
+        public LoginController(IAuthService AuthService)
         {
-            _context = context;
+            _authService = AuthService;
         }
 
         private readonly PasswordHasher<User> _passwordHasher = new PasswordHasher<User>();
@@ -47,35 +49,20 @@ namespace praktika1.Controllers
         [HttpPost]
         public async Task<IActionResult> Register(RegisterValidationModel podatke)
         {
-            bool usernameExists = await _context.Users.AnyAsync(u => u.Username == podatke.Username);
-            if (usernameExists)
-            {
-                ModelState.AddModelError("Username", "Korisničko ime je već zauzeto.");
-            }
-
-            bool emailExists = await _context.Users.AnyAsync(u => u.Email == podatke.Email);
-            if (emailExists)
-            {
-                ModelState.AddModelError("Email", "Email adresa je već zauzeta.");
-            }
-
             if (!ModelState.IsValid)
             {
                 return View(podatke);
             }
 
-            User newUser = new User
+            ServiceResult<User> result = await _authService.RegisterAsync(podatke);
+
+            if (!result.Uspesno)
             {
-                Username = podatke.Username,
-                Email = podatke.Email,
-                Role = Role.User
-            };
+                ModelState.AddModelError(result.KljucGreske, result.Poruka);
+                return View(podatke);
+            }
 
-            newUser.PasswordHash = HashPassword(podatke.Password);
-
-            _context.Users.Add(newUser);
-            await _context.SaveChangesAsync();
-
+            User newUser = result.Podaci;
 
             HttpContext.Session.SetInt32("UserId", newUser.Id);
             HttpContext.Session.SetString("Username", newUser.Username);
@@ -94,13 +81,15 @@ namespace praktika1.Controllers
                 return View(podatke);
             }
 
-            User user = await _context.Users.FirstOrDefaultAsync(u => u.Username == podatke.UsernameOrEmail || u.Email == podatke.UsernameOrEmail);
+            ServiceResult<User> result = await _authService.LoginAsync(podatke);
 
-            if (user == null || !VerifyPassword(user.PasswordHash, podatke.Password))
+            if (!result.Uspesno)
             {
-                ModelState.AddModelError("Password", "Neispravno ime/email ili lozinka.");
+                ModelState.AddModelError(result.KljucGreske, result.Poruka);
                 return View(podatke);
             }
+
+            User user = result.Podaci;
 
             HttpContext.Session.SetInt32("UserId", user.Id);
             HttpContext.Session.SetString("Username", user.Username);
