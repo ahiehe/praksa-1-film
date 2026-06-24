@@ -11,7 +11,7 @@ namespace praktika1.Filters
 
             if (!string.IsNullOrEmpty(role))
             {
-                context.Result = new RedirectToActionResult("Index", "Home", null);
+                context.Result = new RedirectToActionResult("Index", "Film", null);
             }
 
             base.OnActionExecuting(context);

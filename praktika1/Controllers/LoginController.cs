@@ -17,15 +17,11 @@ namespace praktika1.Controllers
             _authService = AuthService;
         }
 
-        private readonly PasswordHasher<User> _passwordHasher = new PasswordHasher<User>();
-        private string HashPassword(string password)
+        private void SetUserSession(User user)
         {
-            return _passwordHasher.HashPassword(null, password);
-        }
-
-        private bool VerifyPassword(string hash, string password)
-        {
-            return _passwordHasher.VerifyHashedPassword(null, hash, password) == PasswordVerificationResult.Success;
+            HttpContext.Session.SetInt32("UserId", user.Id);
+            HttpContext.Session.SetString("Username", user.Username);
+            HttpContext.Session.SetString("Role", user.Role.ToString());
         }
 
         [NotLogedInRequired]
@@ -43,7 +39,7 @@ namespace praktika1.Controllers
         public async Task<IActionResult> Logout()
         {
             HttpContext.Session.Clear();
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Film");
         }
 
         [HttpPost]
@@ -64,12 +60,9 @@ namespace praktika1.Controllers
 
             User newUser = result.Podaci;
 
-            HttpContext.Session.SetInt32("UserId", newUser.Id);
-            HttpContext.Session.SetString("Username", newUser.Username);
-            HttpContext.Session.SetString("Role", newUser.Role.ToString());
+            SetUserSession(newUser);
 
-
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Film");
         }
 
 
@@ -91,11 +84,9 @@ namespace praktika1.Controllers
 
             User user = result.Podaci;
 
-            HttpContext.Session.SetInt32("UserId", user.Id);
-            HttpContext.Session.SetString("Username", user.Username);
-            HttpContext.Session.SetString("Role", user.Role.ToString());
+            SetUserSession(user);
 
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Film");
         }
     }
 }
