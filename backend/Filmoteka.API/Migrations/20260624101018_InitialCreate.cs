@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace praktika1.Migrations
+namespace Filmoteka.API.Migrations
 {
     /// <inheritdoc />
     public partial class InitialCreate : Migration
@@ -15,11 +15,11 @@ namespace praktika1.Migrations
                 name: "Reziseri",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Ime = table.Column<string>(type: "TEXT", maxLength: 150, nullable: false),
-                    Prezime = table.Column<string>(type: "TEXT", maxLength: 150, nullable: false),
-                    DatumRodjenja = table.Column<DateTime>(type: "TEXT", nullable: true)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Ime = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Prezime = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    DatumRodjenja = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -27,12 +27,28 @@ namespace praktika1.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Users",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Username = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Role = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Users", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Zanrovi",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Naziv = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Naziv = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -43,11 +59,12 @@ namespace praktika1.Migrations
                 name: "Filmovi",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Naziv = table.Column<string>(type: "TEXT", maxLength: 250, nullable: false),
-                    GodinaIzdanja = table.Column<int>(type: "INTEGER", nullable: false),
-                    ZanrId = table.Column<int>(type: "INTEGER", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Naziv = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: false),
+                    Opis = table.Column<string>(type: "nvarchar(2500)", maxLength: 2500, nullable: false),
+                    GodinaIzdanja = table.Column<int>(type: "int", nullable: false),
+                    ZanrId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -64,8 +81,8 @@ namespace praktika1.Migrations
                 name: "FilmReziser",
                 columns: table => new
                 {
-                    FilmoviId = table.Column<int>(type: "INTEGER", nullable: false),
-                    ReziseriId = table.Column<int>(type: "INTEGER", nullable: false)
+                    FilmoviId = table.Column<int>(type: "int", nullable: false),
+                    ReziseriId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -100,6 +117,9 @@ namespace praktika1.Migrations
         {
             migrationBuilder.DropTable(
                 name: "FilmReziser");
+
+            migrationBuilder.DropTable(
+                name: "Users");
 
             migrationBuilder.DropTable(
                 name: "Filmovi");

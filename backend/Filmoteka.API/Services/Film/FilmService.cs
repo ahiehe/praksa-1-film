@@ -79,7 +79,6 @@ namespace MainProjectOOPIII3.Services.Film
 
         public async Task<ServiceResult> UpdateFilmAsync(int id, praktika1.Models.Film film, int[] izabraniReziseri)
         {
-            if (id != film.Id) return ServiceResult.Greska("notfound");
 
             if (izabraniReziseri == null || izabraniReziseri.Length == 0)
             {

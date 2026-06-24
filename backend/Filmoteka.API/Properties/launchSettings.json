@@ -4,8 +4,9 @@
     "http": {
       "commandName": "Project",
       "dotnetRunMessages": true,
+      "launchUrl": "swagger",
       "launchBrowser": true,
-      "applicationUrl": "http://localhost:5218",
+      "applicationUrl": "http://localhost:5000",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
