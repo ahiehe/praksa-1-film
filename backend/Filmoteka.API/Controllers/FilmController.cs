@@ -1,6 +1,7 @@
 using Filmoteka.API.DTOs;
 using MainProjectOOPIII3.Services;
 using MainProjectOOPIII3.Services.Account;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using praktika1.DTOs;
@@ -44,6 +45,7 @@ namespace praktika1.Controllers
             return Ok(film);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost("create")]
         public async Task<IActionResult> CreateFilm([FromBody] CreateFilmDTO dto)
         {
@@ -70,7 +72,7 @@ namespace praktika1.Controllers
             return BadRequest(new { message = result.Poruka });
         }
 
-
+        [Authorize(Roles = "Admin")]
         [HttpPut("update/{id}")]
         public async Task<IActionResult> UpdateFilm(int id, [FromBody] CreateFilmDTO dto)
         {
@@ -102,6 +104,7 @@ namespace praktika1.Controllers
             return BadRequest(new { message = result.Poruka });
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpDelete("delete/{id}")]
         public async Task<IActionResult> DeleteFilm(int id)
         {

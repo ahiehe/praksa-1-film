@@ -1,8 +1,12 @@
+using Filmoteka.API.Services.Auth;
 using MainProjectOOPIII3.Services.Account;
 using MainProjectOOPIII3.Services.Film;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using praktika1.Data;
 using praktika1.Models;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +23,23 @@ builder.Services.AddDbContext<MyAppContext>(options =>
 
 builder.Services.AddScoped<IFilmService, FilmService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<JwtService>();
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = builder.Configuration["Jwt:Issuer"],
+            ValidAudience = builder.Configuration["Jwt:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!))
+        };
+    });
 
 // Add services to the container.
 builder.Services.AddControllers();
@@ -99,6 +120,8 @@ using (var scope = app.Services.CreateScope())
 }
 */
 
+
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -113,7 +136,9 @@ app.UseHttpsRedirection();
 app.UseRouting();
 app.UseCors("AllowReactApp");
 
+app.UseAuthentication();
 app.UseAuthorization();
+
 
 app.MapControllers();
 

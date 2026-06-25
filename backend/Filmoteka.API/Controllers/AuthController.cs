@@ -1,4 +1,5 @@
-﻿using MainProjectOOPIII3.Services;
+﻿using Filmoteka.API.DTOs;
+using MainProjectOOPIII3.Services;
 using MainProjectOOPIII3.Services.Account;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -26,14 +27,14 @@ namespace praktika1.Controllers
                 return BadRequest(ModelState);
             }
 
-            ServiceResult<User> result = await _authService.RegisterAsync(podatke);
+            ServiceResult<AuthResponseDTO> result = await _authService.RegisterAsync(podatke);
 
             if (!result.Uspesno)
             {
                 return BadRequest(new { message = result.Poruka });
             }
 
-            return Ok(new { token = "aaaaa", username = result.Podaci.Username });
+            return Ok(result.Podaci);
         }
 
 
@@ -45,18 +46,14 @@ namespace praktika1.Controllers
                 return BadRequest(ModelState);
             }
 
-            ServiceResult<User> result = await _authService.LoginAsync(podatke);
+            ServiceResult<AuthResponseDTO> result = await _authService.LoginAsync(podatke);
 
             if (!result.Uspesno)
             {
                 return BadRequest(new { message = result.Poruka });
             }
 
-            return Ok(new
-            {
-                token = "aaaaa",
-                username = result.Podaci.Username
-            });
+            return Ok(result.Podaci);
         }
     }
 }
