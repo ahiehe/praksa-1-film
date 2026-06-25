@@ -29,7 +29,20 @@ namespace praktika1.Controllers
             return Ok(result.Podaci);
         }
 
-        
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> DetailsFilm(int id)
+        {
+            ServiceResult<Film> result = await _filmService.GetFilmByIdAsync(id);
+            Film film = result.Podaci;
+
+            if (film == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(film);
+        }
 
         [HttpPost("create")]
         public async Task<IActionResult> CreateFilm([FromBody] CreateFilmDTO dto)
@@ -51,29 +64,14 @@ namespace praktika1.Controllers
             ServiceResult result = await _filmService.CreateFilmAsync(film, dto.IzabraniReziseri);
             if (result.Uspesno)
             {
-                return CreatedAtAction("DetailsFilm", new { id = film.Id });
+                return Ok( new { id = film.Id });
             }
 
             return BadRequest(new { message = result.Poruka });
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> DetailsFilm(int id)
-        {
-            ServiceResult<Film> result = await _filmService.GetFilmByIdAsync(id);
-            Film film = result.Podaci;
 
-            if (film == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(film);
-        }
-
-
-
-        [HttpPost("update/{id}")]
+        [HttpPut("update/{id}")]
         public async Task<IActionResult> UpdateFilm(int id, [FromBody] CreateFilmDTO dto)
         {
             if (!ModelState.IsValid)
@@ -104,7 +102,7 @@ namespace praktika1.Controllers
             return BadRequest(new { message = result.Poruka });
         }
 
-        [HttpPost("delete/{id}")]
+        [HttpDelete("delete/{id}")]
         public async Task<IActionResult> DeleteFilm(int id)
         {
             
@@ -116,7 +114,7 @@ namespace praktika1.Controllers
         [HttpGet("zanrovi")]
         public async Task<IActionResult> GetZanrovi()
         {
-            var result = await _filmService.GetZanroviSelectListAsync();
+            var result = await _filmService.GetZanroviAsync();
 
             return Ok(result.Podaci);
         }
@@ -124,7 +122,7 @@ namespace praktika1.Controllers
         [HttpGet("reziseri")]
         public async Task<IActionResult> GetReziseri()
         {
-            var result = await _filmService.GetReziseriMultiSelectListAsync();
+            var result = await _filmService.GetReziseriAsync();
             return Ok(result.Podaci);
         }
 

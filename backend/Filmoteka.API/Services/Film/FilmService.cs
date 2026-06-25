@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Filmoteka.API.DTOs;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using praktika1.Data;
 using praktika1.DTOs;
+using praktika1.Models;
 
 namespace MainProjectOOPIII3.Services.Film
 {
@@ -13,17 +15,18 @@ namespace MainProjectOOPIII3.Services.Film
             _context = context;
         }
 
-        public async Task<ServiceResult<SelectList>> GetZanroviSelectListAsync(int? selectedId = null)
+        public async Task<ServiceResult<List<Zanr>>> GetZanroviAsync()
         {
             var zanrovi = await _context.Zanrovi.ToListAsync();
-            return ServiceResult<SelectList>.Ok(new SelectList(zanrovi, "Id", "Naziv", selectedId));
-
-            
+            return ServiceResult<List<Zanr>>.Ok(zanrovi);
         }
-        public async Task<ServiceResult<MultiSelectList>> GetReziseriMultiSelectListAsync(int[]? selectedIds = null)
+
+        public async Task<ServiceResult<List<ReziserDTO>>> GetReziseriAsync()
         {
-            var reziseri = await _context.Reziseri.Select(r => new { r.Id, ImePrezime = r.Ime + " " + r.Prezime }).ToListAsync();
-            return ServiceResult<MultiSelectList>.Ok(new MultiSelectList(reziseri, "Id", "ImePrezime", selectedIds));
+            var reziseri = await _context.Reziseri
+                 .Select(r => new ReziserDTO { Id = r.Id, Ime = r.Ime, Prezime = r.Prezime })
+                 .ToListAsync();
+            return ServiceResult<List<ReziserDTO>>.Ok(reziseri);
         }
 
         public async Task<ServiceResult<PaginatedFilmsDTO>> GetPaginatedFilmsAsync(int page, int pageSize)

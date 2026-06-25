@@ -1,0 +1,59 @@
+import { FC, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { register } from '../api/authApi';
+import { AuthCard } from '../components/AuthCard';
+import { FormInput } from '../components/FormInput';
+import { saveAuth } from '../utils/storage';
+import { ROUTES } from '../constants/routes';
+import { Register as RegisterType } from '../types/auth';
+
+export const Register: FC = () => {
+    const navigate = useNavigate();
+    const [form, setForm] = useState<RegisterType>({ username: '', email: '', password: '' });
+    const [error, setError] = useState('');
+    const [loading, setLoading] = useState(false);
+
+    const handleSubmit = () => {
+        setError('');
+        setLoading(true);
+        register(form)
+            .then(res => {
+                saveAuth(res.token, res.username);
+                navigate(ROUTES.HOME);
+            })
+            .catch(err => setError(err.response?.data?.message ?? 'Greška pri registraciji.'))
+            .finally(() => setLoading(false));
+    };
+
+    return (
+        <AuthCard
+            title="Registracija"
+            submitLabel="Registruj se"
+            bottomText="Već imate nalog?"
+            bottomLinkText="Prijavite se"
+            bottomLinkTo={ROUTES.LOGIN}
+            onSubmit={handleSubmit}
+            loading={loading}
+            error={error}
+        >
+            <FormInput
+                label="Korisničko ime"
+                type="text"
+                value={form.username}
+                onChange={e => setForm(p => ({ ...p, username: e.target.value }))}
+            />
+            <FormInput
+                label="Email"
+                type="email"
+                value={form.email}
+                onChange={e => setForm(p => ({ ...p, email: e.target.value }))}
+            />
+            <FormInput
+                label="Lozinka"
+                type="password"
+                value={form.password}
+                onChange={e => setForm(p => ({ ...p, password: e.target.value }))}
+            />
+        </AuthCard>
+    );
+};
