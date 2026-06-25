@@ -1,15 +1,18 @@
+using Filmoteka.API.DTOs;
 using MainProjectOOPIII3.Services;
 using MainProjectOOPIII3.Services.Account;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using praktika1.DTOs;
-using praktika1.Filters;
 using praktika1.Models;
 
 
 namespace praktika1.Controllers
 {
-    public class FilmController : Controller
+    [ApiController]
+    [Route("api/[controller]")]
+    public class FilmController : ControllerBase
     {
 
         private IFilmService _filmService;
@@ -19,54 +22,16 @@ namespace praktika1.Controllers
             _filmService = filmService;
         }
 
-
-        public async Task<IActionResult> Index(int page = 1)
+        [HttpGet]
+        public async Task<IActionResult> Index([FromQuery] int page = 1)
         {
             ServiceResult<PaginatedFilmsDTO> result = await _filmService.GetPaginatedFilmsAsync(page, 6);
 
-
-            ViewBag.TrenutnaStranica = result.Podaci.TrenutnaStranica;
-            ViewBag.UkupnoStranica = result.Podaci.UkupnoStranica;
-
-            return View(result.Podaci.Filmovi);
+            return Ok(result.Podaci);
         }
 
-        [AdminRequired]
-        public async Task<IActionResult> CreateFilm()
-        {
-            ServiceResult<SelectList> zanroviResult = await _filmService.GetZanroviSelectListAsync();
-            ServiceResult<MultiSelectList> reziseriResult = await _filmService.GetReziseriMultiSelectListAsync();
 
-            ViewData["ZanrId"] = zanroviResult.Podaci;
-            ViewBag.ReziseriId = reziseriResult.Podaci;
-
-            return View();
-        }
-
-        [HttpPost]
-        [AdminRequired]
-        public async Task<IActionResult> CreateFilm([Bind("Naziv,GodinaIzdanja,ZanrId,Opis")] Film film, int[] izabraniReziseri)
-        {
-
-            if (ModelState.IsValid)
-            {
-                ServiceResult result = await _filmService.CreateFilmAsync(film, izabraniReziseri);
-                if (result.Uspesno)
-                {
-                    return RedirectToAction("Index");
-                }
-                ModelState.AddModelError(result.KljucGreske, result.Poruka);
-            }
-
-            ServiceResult<SelectList> zanroviResult = await _filmService.GetZanroviSelectListAsync(film.ZanrId);
-            ServiceResult<MultiSelectList> reziseriResult = await _filmService.GetReziseriMultiSelectListAsync(izabraniReziseri);
-
-            ViewData["ZanrId"] = zanroviResult.Podaci;
-            ViewBag.ReziseriId = reziseriResult.Podaci;
-
-            return View(film);
-        }
-
+        [HttpGet("{id}")]
         public async Task<IActionResult> DetailsFilm(int id)
         {
             ServiceResult<Film> result = await _filmService.GetFilmByIdAsync(id);
@@ -77,76 +42,92 @@ namespace praktika1.Controllers
                 return NotFound();
             }
 
-            return View(film);
+            return Ok(film);
         }
 
-        [AdminRequired]
-        public async Task<IActionResult> UpdateFilm(int id)
+        [Authorize(Roles = "Admin")]
+        [HttpPost("create")]
+        public async Task<IActionResult> CreateFilm([FromBody] CreateFilmDTO dto)
         {
-            
-            ServiceResult<Film> result = await _filmService.GetFilmByIdAsync(id);
-            Film film = result.Podaci;
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
-            if (film == null)
+            var film = new Film
+            {
+                Naziv = dto.Naziv,
+                GodinaIzdanja = dto.GodinaIzdanja,
+                ZanrId = dto.ZanrId,
+                Opis = dto.Opis
+            };
+
+
+            ServiceResult result = await _filmService.CreateFilmAsync(film, dto.IzabraniReziseri);
+            if (result.Uspesno)
+            {
+                return Ok( new { id = film.Id });
+            }
+
+            return BadRequest(new { message = result.Poruka });
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPut("update/{id}")]
+        public async Task<IActionResult> UpdateFilm(int id, [FromBody] CreateFilmDTO dto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var film = new Film
+            {
+                Naziv = dto.Naziv,
+                GodinaIzdanja = dto.GodinaIzdanja,
+                ZanrId = dto.ZanrId,
+                Opis = dto.Opis
+            };
+
+            ServiceResult result = await _filmService.UpdateFilmAsync(id, film, dto.IzabraniReziseri);
+
+            if (result.Poruka == "notfound")
             {
                 return NotFound();
             }
 
-            var trenutniReziseriIds = film.Reziseri.Select(r => r.Id).ToArray();
-
-            ServiceResult<SelectList> zanroviResult = await _filmService.GetZanroviSelectListAsync(film.ZanrId);
-            ServiceResult<MultiSelectList> reziseriResult = await _filmService.GetReziseriMultiSelectListAsync(trenutniReziseriIds);
-
-            ViewData["ZanrId"] = zanroviResult.Podaci;
-            ViewBag.ReziseriId = reziseriResult.Podaci;
-
-            return View(film);
-        }
-
-
-        [HttpPost]
-        [AdminRequired]
-        public async Task<IActionResult> UpdateFilm(int id, [Bind("Id,Naziv,GodinaIzdanja,ZanrId,Opis")] Film film, int[] izabraniReziseri)
-        {
-
-            if (ModelState.IsValid)
+            if (result.Uspesno)
             {
-                ServiceResult result = await _filmService.UpdateFilmAsync(id, film, izabraniReziseri);
-
-                if (result.Poruka == "notfound")
-                {
-                    return NotFound();
-                }
-
-                if (result.Uspesno)
-                {    
-                    return RedirectToAction("Index");
-                }
-
-                ModelState.AddModelError(result.KljucGreske, result.Poruka);
+                return Ok(new { message = "Film je promenjen" });
             }
 
-            ServiceResult<SelectList> zanroviResult = await _filmService.GetZanroviSelectListAsync(film.ZanrId);
-            ServiceResult<MultiSelectList> reziseriResult = await _filmService.GetReziseriMultiSelectListAsync(izabraniReziseri);
-
-            ViewData["ZanrId"] = zanroviResult.Podaci;
-            ViewBag.ReziseriId = reziseriResult.Podaci;
-
-            return View(film);
+            return BadRequest(new { message = result.Poruka });
         }
 
-        [HttpPost]
-        [AdminRequired]
+        [Authorize(Roles = "Admin")]
+        [HttpDelete("delete/{id}")]
         public async Task<IActionResult> DeleteFilm(int id)
         {
             
             await _filmService.DeleteFilmAsync(id);
 
-            return RedirectToAction("Index");
+            return Ok(new { message = "Film je obrisan" });
         }
 
+        [HttpGet("zanrovi")]
+        public async Task<IActionResult> GetZanrovi()
+        {
+            var result = await _filmService.GetZanroviAsync();
 
+            return Ok(result.Podaci);
+        }
 
+        [HttpGet("reziseri")]
+        public async Task<IActionResult> GetReziseri()
+        {
+            var result = await _filmService.GetReziseriAsync();
+            return Ok(result.Podaci);
+        }
 
     }
 }

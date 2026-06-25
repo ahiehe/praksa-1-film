@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace praktika1.Models
 {
@@ -14,6 +15,8 @@ namespace praktika1.Models
         [StringLength(50, ErrorMessage = "Ime ne sme biti duze od 50 karaktera.")]
         public string Prezime { get; set; }
         public DateTime? DatumRodjenja { get; set; }
+
+        [JsonIgnore]
         public List<Film> Filmovi { get; set; }
     }
 }
