@@ -29,29 +29,62 @@ namespace MainProjectOOPIII3.Services.Film
             return ServiceResult<List<ReziserDTO>>.Ok(reziseri);
         }
 
-        public async Task<ServiceResult<PaginatedFilmsDTO>> GetPaginatedFilmsAsync(int page, int pageSize)
+        public async Task<ServiceResult<PaginatedFilmsDTO>> GetPaginatedFilmsAsync(FilmQueryDTO filters, int pageSize)
         {
-            if (page < 1) page = 1;
+            var query = _context.Filmovi
+                .Include(f => f.Zanr)
+                .Include(f => f.Reziseri)
+                .AsQueryable();
 
-            var ukupnoFilmova = await _context.Filmovi.CountAsync();
+            if (!string.IsNullOrEmpty(filters.Search))
+            {
+                query = query.Where(f => f.Naziv.Contains(filters.Search) || f.Opis.Contains(filters.Search));
+            }
+
+            if (filters.UBioskopima.HasValue && filters.UBioskopima.Value)
+            {
+                query = query.Where(f => f.PocetakPrikazivanja != null &&
+                                            f.KrajPrikazivanja != null && 
+                                            f.PocetakPrikazivanja <= DateTime.Now && 
+                                            f.KrajPrikazivanja >= DateTime.Now);
+            }
+
+            if (filters.GodinaOd.HasValue)
+            {
+                query = query.Where(f => f.GodinaIzdanja >= filters.GodinaOd.Value);
+            }
+
+            if (filters.GodinaDo.HasValue)
+            {
+                query = query.Where(f => f.GodinaIzdanja <= filters.GodinaDo.Value);
+            }
+
+            if (filters.ZanrId.HasValue)
+            {
+                query = query.Where(f => f.ZanrId == filters.ZanrId.Value);
+            }
+
+            if (filters.Page < 1) filters.Page = 1;
+
+            var ukupnoFilmova = await query.CountAsync();
 
             int ukupnoStranica = (int)Math.Ceiling((double)ukupnoFilmova / pageSize);
 
-            if (page > ukupnoStranica && ukupnoStranica > 0) page = ukupnoStranica;
+            ukupnoStranica = ukupnoStranica == 0 ? 1 : ukupnoStranica;
+
+            if (filters.Page > ukupnoStranica && ukupnoStranica > 0) filters.Page = ukupnoStranica;
 
 
-            var filmovi = await _context.Filmovi
-                .Include(f => f.Zanr)
-                .Include(f => f.Reziseri)
+            var filmovi = await query
                 .OrderBy(f => f.Id)
-                .Skip((page - 1) * pageSize)
+                .Skip((filters.Page - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
 
             return ServiceResult<PaginatedFilmsDTO>.Ok(new PaginatedFilmsDTO
             {
                 Filmovi = filmovi,
-                TrenutnaStranica = page,
+                TrenutnaStranica = filters.Page,
                 UkupnoStranica = ukupnoStranica
             });
         }
@@ -98,6 +131,8 @@ namespace MainProjectOOPIII3.Services.Film
             filmIzBaze.GodinaIzdanja = film.GodinaIzdanja;
             filmIzBaze.ZanrId = film.ZanrId;
             filmIzBaze.Opis = film.Opis;
+            filmIzBaze.PocetakPrikazivanja = film.PocetakPrikazivanja;
+            filmIzBaze.KrajPrikazivanja = film.KrajPrikazivanja;
 
             filmIzBaze.Reziseri.Clear();
             var noviReziseri = await _context.Reziseri

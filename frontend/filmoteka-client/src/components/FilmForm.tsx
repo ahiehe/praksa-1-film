@@ -18,6 +18,8 @@ const EMPTY: CreateFilmDTO = {
     zanrId: 0,
     opis: '',
     izabraniReziseri: [],
+    pocetakPrikazivanja: null,
+    krajPrikazivanja: null,
 };
 
 export const FilmForm: FC<FilmFormProps> = ({ initial, onSubmit, loading, error, submitLabel }) => {
@@ -103,6 +105,21 @@ export const FilmForm: FC<FilmFormProps> = ({ initial, onSubmit, loading, error,
                         </label>
                     ))}
                 </div>
+            </div>
+
+            <div className="flex gap-4">
+                <FormInput
+                    label="Početak prikazivanja"
+                    type="date"
+                    value={form.pocetakPrikazivanja ?? ''}
+                    onChange={e => setForm(p => ({ ...p, pocetakPrikazivanja: e.target.value || null }))}
+                />
+                <FormInput
+                    label="Kraj prikazivanja"
+                    type="date"
+                    value={form.krajPrikazivanja ?? ''}
+                    onChange={e => setForm(p => ({ ...p, krajPrikazivanja: e.target.value || null }))}
+                />
             </div>
 
             <button

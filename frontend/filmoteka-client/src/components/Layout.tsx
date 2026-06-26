@@ -14,15 +14,14 @@ export const Layout: FC = () => {
                         FILMOTEKA
                     </Link>
                     <div className="flex gap-4 items-center">
-                        <Link to={ROUTES.HOME} className="text-slate-300 hover:text-white transition-colors">
-                            Filmovi
-                        </Link>
-                        <Link to={ROUTES.CREATE} className="bg-indigo-600 hover:bg-indigo-500 px-3 py-1.5 rounded-md text-sm font-medium transition-colors">
-                            + Dodaj Film
-                        </Link>
                         { isLogged ? (
-                            <div className="flex gap-4 items-center">
-                                <span className="text-slate-300">{getUsername()}</span>
+                            <div className="flex gap-8 items-center">
+                                <div className="flex items-center gap-2">
+                                    <div className="w-7 h-7 rounded-full bg-indigo-900 flex items-center justify-center text-xs font-medium text-indigo-300">
+                                        {getUsername()?.charAt(0).toUpperCase()}
+                                    </div>
+                                    <span className="text-slate-300">{getUsername()}</span>
+                                </div>
                                 <button 
                                     onClick={() => { clearAuth(); window.location.href = ROUTES.HOME; }}
                                     className="text-slate-300 hover:text-white transition-colors"

@@ -19,7 +19,7 @@ export const Login: FC = () => {
         login(form)
             .then(res => {
                 saveAuth(res.token, res.username);
-                navigate(ROUTES.HOME);
+                window.location.href = ROUTES.HOME;
             })
             .catch(err => setError(err.response?.data?.message ?? 'Greška pri prijavi.'))
             .finally(() => setLoading(false));
