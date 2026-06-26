@@ -34,13 +34,13 @@ namespace MainProjectOOPIII3.Services.Account
             bool usernameExists = await _context.Users.AnyAsync(u => u.Username == model.Username);
             if (usernameExists)
             {
-                return ServiceResult<AuthResponseDTO>.Greska("Korisničko ime je već zauzeto.", "Username");
+                return ServiceResult<AuthResponseDTO>.Greska("Korisničko ime je već zauzeto.");
             }
 
             bool emailExists = await _context.Users.AnyAsync(u => u.Email == model.Email);
             if (emailExists)
             {
-                return ServiceResult<AuthResponseDTO>.Greska("Email adresa je već zauzeta.", "Email");
+                return ServiceResult<AuthResponseDTO>.Greska("Email adresa je već zauzeta.");
             }
 
             User newUser = new User
@@ -68,7 +68,7 @@ namespace MainProjectOOPIII3.Services.Account
 
             if (user == null || !VerifyPassword(user.PasswordHash, model.Password))
             {
-                return ServiceResult<AuthResponseDTO>.Greska("Neispravno ime/email ili lozinka.", "UsernameOrEmail");
+                return ServiceResult<AuthResponseDTO>.Greska("Neispravno ime/email ili lozinka.");
             }
 
             return ServiceResult<AuthResponseDTO>.Ok(new AuthResponseDTO

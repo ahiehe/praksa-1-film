@@ -6,6 +6,7 @@ import { FilmForm } from '../components/FilmForm';
 import { ROUTES } from '../constants/routes';
 import { Loading } from '../components/Loading';
 import axios from 'axios';
+import toast from 'react-hot-toast';
 
 export const FilmEdit: FC = () => {
     const { id } = useParams();
@@ -13,7 +14,6 @@ export const FilmEdit: FC = () => {
     const [initial, setInitial] = useState<CreateFilmDTO | null>(null);
     const [loading, setLoading] = useState(false);
     const [fetchLoading, setFetchLoading] = useState(true);
-    const [error, setError] = useState('');
 
     useEffect(() => {
         getFilmById(Number(id))
@@ -32,11 +32,13 @@ export const FilmEdit: FC = () => {
     }, [id]);
 
     const handleSubmit = (dto: CreateFilmDTO) => {
-        setError('');
         setLoading(true);
         updateFilm(Number(id), dto)
-            .then(() => navigate(ROUTES.DETAILS(Number(id))))
-            .catch(err => setError(axios.isAxiosError(err)
+            .then(() => {
+                toast.success("Film je promenjen!");
+                navigate(ROUTES.DETAILS(Number(id)));
+            })
+            .catch(err => toast.error(axios.isAxiosError(err)
                 ? err.response?.data?.message ?? 'Greška pri izmeni.'
                 : 'Greška.'
             ))
@@ -61,7 +63,6 @@ export const FilmEdit: FC = () => {
                     initial={initial}
                     onSubmit={handleSubmit}
                     loading={loading}
-                    error={error}
                     submitLabel="Sačuvaj izmene"
                 />
             </div>

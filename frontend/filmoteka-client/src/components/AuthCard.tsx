@@ -8,25 +8,18 @@ interface AuthCardProps {
     bottomLinkTo: string;
     onSubmit: () => void;
     loading: boolean;
-    error?: string;
     submitLabel: string;
     children: ReactNode;
 }
 
 export const AuthCard: FC<AuthCardProps> = ({
     title, bottomText, bottomLinkText, bottomLinkTo,
-    onSubmit, loading, error, submitLabel, children
+    onSubmit, loading, submitLabel, children
 }) => {
     return (
         <div className="min-h-[80vh] flex items-center justify-center">
             <div className="bg-slate-800 border border-slate-700 rounded-xl p-8 w-full max-w-md flex flex-col gap-5">
                 <h1 className="text-2xl font-medium text-white">{title}</h1>
-
-                {error && (
-                    <div className="bg-red-900/30 border border-red-800 text-red-400 text-sm px-4 py-2.5 rounded-md">
-                        {error}
-                    </div>
-                )}
 
                 {children}
 

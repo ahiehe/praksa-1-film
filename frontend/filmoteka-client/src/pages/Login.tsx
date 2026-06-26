@@ -6,22 +6,30 @@ import { FormInput } from '../components/FormInput';
 import { saveAuth } from '../utils/storage';
 import { ROUTES } from '../constants/routes';
 import { Login as LoginType } from '../types/auth';
+import toast from 'react-hot-toast';
+import axios from 'axios';
 
 export const Login: FC = () => {
     const navigate = useNavigate();
     const [form, setForm] = useState<LoginType>({ usernameOrEmail: '', password: '' });
-    const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
 
     const handleSubmit = () => {
-        setError('');
         setLoading(true);
         login(form)
             .then(res => {
                 saveAuth(res.token, res.username);
                 window.location.href = ROUTES.HOME;
             })
-            .catch(err => setError(err.response?.data?.message ?? 'Greška pri prijavi.'))
+            .catch(err => {
+                if (axios.isAxiosError(err)) {
+                    const data = err.response?.data;
+                    const firstError = data?.errors
+                        ? Object.values(data.errors).flat()[0] as string
+                        : null;
+                    toast.error(firstError ?? data?.message ?? 'Greška pri prijavi.');
+                }
+            })
             .finally(() => setLoading(false));
     };
 
@@ -34,7 +42,6 @@ export const Login: FC = () => {
             bottomLinkTo={ROUTES.REGISTER}
             onSubmit={handleSubmit}
             loading={loading}
-            error={error}
         >
             <FormInput
                 label="Korisničko ime ili email"

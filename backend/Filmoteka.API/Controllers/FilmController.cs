@@ -95,11 +95,6 @@ namespace praktika1.Controllers
 
             ServiceResult result = await _filmService.UpdateFilmAsync(id, film, dto.IzabraniReziseri);
 
-            if (result.Poruka == "notfound")
-            {
-                return NotFound();
-            }
-
             if (result.Uspesno)
             {
                 return Ok(new { message = "Film je promenjen" });
