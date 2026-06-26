@@ -7,9 +7,10 @@ import { isUBioskopima } from "../utils/filmUtils";
 interface FilmCardProps {
     film: Film;
     onDelete: (id: number) => void;
+    isAdmin?: boolean;
 }
 
-export const FilmCard: FC<FilmCardProps> = ({ film, onDelete }) => {
+export const FilmCard: FC<FilmCardProps> = ({ film, onDelete, isAdmin }) => {
     const uBioskopima = isUBioskopima(film);
 
     return (
@@ -44,10 +45,12 @@ export const FilmCard: FC<FilmCardProps> = ({ film, onDelete }) => {
                 </div>
             )}
 
+            
             <div className="flex gap-2 mt-auto">
                 <Link to={ROUTES.DETAILS(film.id)} className="flex-1 text-center text-sm border border-slate-600 hover:border-slate-400 px-3 py-1.5 rounded-md transition-colors">
                     Detalji
                 </Link>
+                {isAdmin && <>
                 <Link to={ROUTES.EDIT(film.id)} className="flex-1 text-center text-sm border border-slate-600 hover:border-slate-400 px-3 py-1.5 rounded-md transition-colors">
                     Izmeni
                 </Link>
@@ -57,7 +60,10 @@ export const FilmCard: FC<FilmCardProps> = ({ film, onDelete }) => {
                 >
                     Obrisi
                 </button>
+                </>
+                }
             </div>
+            
         </div>
     );
 }

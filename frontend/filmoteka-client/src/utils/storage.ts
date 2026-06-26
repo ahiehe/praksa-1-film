@@ -14,4 +14,20 @@ export const clearAuth = () => {
     localStorage.removeItem(USERNAME_KEY);
 };
 
-export const isLoggedIn = () => !!getToken();
+export const isLoggedIn = (): boolean => !!getToken();
+
+export const parseToken = (token: string) => {
+    const payload = token.split('.')[1];
+    return JSON.parse(atob(payload));
+};
+
+export const getRoleFromToken = (): string | null => {
+    const token = getToken();
+    if (!token) return null;
+    return parseToken(token)["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
+};
+
+export const isUserAdmin = (): boolean => {
+    return getRoleFromToken() === "Admin";
+}
+

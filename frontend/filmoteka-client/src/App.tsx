@@ -8,6 +8,8 @@ import { Login } from './pages/Login';
 import { Register } from './pages/Register';
 import { FilmDetails } from './pages/FIlmDetails';
 import { FilmEdit } from './pages/FIlmEdit';
+import { AdminRoute } from './components/AdminRoute';
+import { ProtectedRoute } from './components/ProtectedRoute';
 
 const router = createBrowserRouter([
     {
@@ -27,16 +29,26 @@ const router = createBrowserRouter([
                 element: <Register />
             },
             {
-                path: ROUTES.CREATE, 
-                element: <FilmCreate />
+                element: <ProtectedRoute />,
+                children: [
+                    {
+                        path: ROUTES.DETAILS_PATTERN,
+                        element: <FilmDetails />
+                    },
+                ]
             },
             {
-                path: ROUTES.DETAILS_PATTERN,
-                element: <FilmDetails />
-            },
-            {
-                path: ROUTES.EDIT_PATTERN,
-                element: <FilmEdit />
+                element: <AdminRoute />,
+                children: [
+                    {
+                        path: ROUTES.EDIT_PATTERN,
+                        element: <FilmEdit />
+                    },
+                    {
+                        path: ROUTES.CREATE, 
+                        element: <FilmCreate />
+                    },
+                ]
             }
 
         ]

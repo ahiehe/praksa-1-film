@@ -5,6 +5,7 @@ import { Film } from '../types/film';
 import { ROUTES } from '../constants/routes';
 import { Loading } from '../components/Loading';
 import { isUBioskopima } from '../utils/filmUtils';
+import { isUserAdmin } from '../utils/storage';
 
 export const FilmDetails: FC = () => {
     const { id } = useParams();
@@ -12,6 +13,8 @@ export const FilmDetails: FC = () => {
     const [film, setFilm] = useState<Film | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
+
+    const isAdmin = isUserAdmin();
 
     useEffect(() => {
         getFilmById(Number(id))
@@ -46,6 +49,7 @@ export const FilmDetails: FC = () => {
                 <Link to={ROUTES.HOME} className="text-slate-400 hover:text-white text-sm transition-colors">
                     ← Nazad
                 </Link>
+                {isAdmin && 
                 <div className="flex gap-2">
                     <Link
                         to={ROUTES.EDIT(film.id)}
@@ -60,6 +64,7 @@ export const FilmDetails: FC = () => {
                         Obriši
                     </button>
                 </div>
+                }
             </div>
 
             <div className="bg-slate-800 border border-slate-700 rounded-xl p-8 flex flex-col gap-5">

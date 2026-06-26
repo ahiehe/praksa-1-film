@@ -7,6 +7,7 @@ import { deleteFilm, getPaginatedFilms, getZanrovi } from '../api/filmApi';
 import { FilmCard } from '../components/FilmCard';
 import { Pagination } from '../components/Pagination';
 import { Loading } from '../components/Loading';
+import { isUserAdmin } from '../utils/storage';
 
 export default function FilmList() {
     const [loading, setLoading] = useState(true);
@@ -14,6 +15,8 @@ export default function FilmList() {
     const [zanrovi, setZanrovi] = useState<Zanr[]>([]);
     const [searchInput, setSearchInput] = useState('');
     const [query, setQuery] = useState<FilmQueryDTO>({ page: 1 });
+
+    const isAdmin = isUserAdmin();
 
     useEffect(() => {
         getZanrovi().then(setZanrovi);
@@ -41,12 +44,14 @@ export default function FilmList() {
 
     return (
         <div>
+            {isAdmin &&
             <div className="flex justify-between items-center mb-6">
                 <h1 className="text-2xl font-medium">Filmovi</h1>
                 <Link to={ROUTES.CREATE} className="bg-indigo-600 hover:bg-indigo-500 px-4 py-2 rounded-md text-sm font-medium transition-colors">
                     + Dodaj film
                 </Link>
             </div>
+            }
 
             <div className="flex flex-col sm:flex-row gap-3 mb-6">
                 <input
@@ -98,7 +103,7 @@ export default function FilmList() {
                     )}
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                         {data?.filmovi.map(film => (
-                            <FilmCard key={film.id} film={film} onDelete={handleDelete} />
+                            <FilmCard key={film.id} film={film} onDelete={handleDelete} isAdmin={isAdmin} />
                         ))}
                     </div>
                     {data && data.ukupnoStranica > 1 && (
