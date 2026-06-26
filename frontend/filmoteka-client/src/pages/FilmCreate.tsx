@@ -5,18 +5,20 @@ import { CreateFilmDTO } from '../types/dto';
 import { FilmForm } from '../components/FilmForm';
 import { ROUTES } from '../constants/routes';
 import axios from 'axios';
+import toast from 'react-hot-toast';
 
 export const FilmCreate: FC = () => {
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState('');
 
     const handleSubmit = (dto: CreateFilmDTO) => {
-        setError('');
         setLoading(true);
         createFilm(dto)
-            .then((res) => navigate(ROUTES.DETAILS(res.id)))
-            .catch(err => setError(axios.isAxiosError(err)
+            .then((res) => {
+                toast.success('Film je uspešno dodat!');
+                navigate(ROUTES.DETAILS(res.id))
+            })
+            .catch(err => toast.error(axios.isAxiosError(err)
                 ? err.response?.data?.message ?? 'Greška pri kreiranju.'
                 : 'Greška.'
             ))
@@ -37,7 +39,6 @@ export const FilmCreate: FC = () => {
                 <FilmForm
                     onSubmit={handleSubmit}
                     loading={loading}
-                    error={error}
                     submitLabel="Dodaj film"
                 />
             </div>

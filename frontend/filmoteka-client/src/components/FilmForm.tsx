@@ -8,7 +8,6 @@ interface FilmFormProps {
     initial?: CreateFilmDTO;
     onSubmit: (dto: CreateFilmDTO) => void;
     loading: boolean;
-    error: string;
     submitLabel: string;
 }
 
@@ -22,7 +21,7 @@ const EMPTY: CreateFilmDTO = {
     krajPrikazivanja: null,
 };
 
-export const FilmForm: FC<FilmFormProps> = ({ initial, onSubmit, loading, error, submitLabel }) => {
+export const FilmForm: FC<FilmFormProps> = ({ initial, onSubmit, loading, submitLabel }) => {
     const [form, setForm] = useState<CreateFilmDTO>(initial ?? EMPTY);
     const [zanrovi, setZanrovi] = useState<Zanr[]>([]);
     const [reziseri, setReziseri] = useState<ReziserOption[]>([]);
@@ -46,11 +45,6 @@ export const FilmForm: FC<FilmFormProps> = ({ initial, onSubmit, loading, error,
 
     return (
         <div className="flex flex-col gap-5">
-            {error && (
-                <div className="bg-red-900/30 border border-red-800 text-red-400 text-sm px-4 py-2.5 rounded-md">
-                    {error}
-                </div>
-            )}
 
             <FormInput
                 label="Naziv"

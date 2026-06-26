@@ -101,7 +101,7 @@ namespace MainProjectOOPIII3.Services.Film
         {
             if (izabraniReziseri == null || izabraniReziseri.Length == 0)
             {
-                return ServiceResult<int>.Greska("Morate izabrati barem jednog režisera!", "izabraniReziseri");
+                return ServiceResult<int>.Greska("Morate izabrati barem jednog režisera!");
             }
 
             film.Reziseri = await _context.Reziseri
@@ -118,14 +118,14 @@ namespace MainProjectOOPIII3.Services.Film
 
             if (izabraniReziseri == null || izabraniReziseri.Length == 0)
             {
-                return ServiceResult.Greska("Morate izabrati barem jednog režisera!", "izabraniReziseri");
+                return ServiceResult.Greska("Morate izabrati barem jednog režisera!");
             }
 
             var filmIzBaze = await _context.Filmovi
                 .Include(f => f.Reziseri)
                 .FirstOrDefaultAsync(f => f.Id == id);
 
-            if (filmIzBaze == null) return ServiceResult.Greska("notfound");
+            if (filmIzBaze == null) return ServiceResult.Greska("Film nije pronadjen");
 
             filmIzBaze.Naziv = film.Naziv;
             filmIzBaze.GodinaIzdanja = film.GodinaIzdanja;

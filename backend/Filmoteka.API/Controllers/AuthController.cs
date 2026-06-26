@@ -43,7 +43,7 @@ namespace praktika1.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                return BadRequest(new { message = "Neispravno ime/email ili lozinka." });
             }
 
             ServiceResult<AuthResponseDTO> result = await _authService.LoginAsync(podatke);
