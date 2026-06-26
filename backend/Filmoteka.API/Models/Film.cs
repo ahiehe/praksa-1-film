@@ -22,6 +22,8 @@ namespace praktika1.Models
         [ForeignKey("ZanrId")]
         public Zanr? Zanr { get; set; }
 
-        public List<Reziser>? Reziseri { get; set; } 
+        public List<Reziser>? Reziseri { get; set; }
+        public DateTime? PocetakPrikazivanja { get; set; }
+        public DateTime? KrajPrikazivanja { get; set; }
     }
 }

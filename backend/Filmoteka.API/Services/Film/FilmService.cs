@@ -98,6 +98,8 @@ namespace MainProjectOOPIII3.Services.Film
             filmIzBaze.GodinaIzdanja = film.GodinaIzdanja;
             filmIzBaze.ZanrId = film.ZanrId;
             filmIzBaze.Opis = film.Opis;
+            filmIzBaze.PocetakPrikazivanja = film.PocetakPrikazivanja;
+            filmIzBaze.KrajPrikazivanja = film.KrajPrikazivanja;
 
             filmIzBaze.Reziseri.Clear();
             var noviReziseri = await _context.Reziseri

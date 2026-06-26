@@ -6,6 +6,8 @@ export interface CreateFilmDTO {
     zanrId: number;
     opis: string;
     izabraniReziseri: number[];
+    pocetakPrikazivanja: string | null;
+    krajPrikazivanja: string | null;
 }
 
 export interface PaginatedFilmsDTO {

@@ -4,6 +4,7 @@ import { getFilmById, deleteFilm } from '../api/filmApi';
 import { Film } from '../types/film';
 import { ROUTES } from '../constants/routes';
 import { Loading } from '../components/Loading';
+import { isUBioskopima } from '../utils/filmUtils';
 
 export const FilmDetails: FC = () => {
     const { id } = useParams();
@@ -37,6 +38,8 @@ export const FilmDetails: FC = () => {
 
     if (!film) return null;
 
+    const uBioskopima = isUBioskopima(film);
+
     return (
         <div className="max-w-2xl mx-auto py-8 flex flex-col gap-6">
             <div className="flex items-center justify-between">
@@ -62,9 +65,16 @@ export const FilmDetails: FC = () => {
             <div className="bg-slate-800 border border-slate-700 rounded-xl p-8 flex flex-col gap-5">
                 <div className="flex items-start justify-between gap-4">
                     <h1 className="text-2xl font-medium text-white">{film.naziv}</h1>
-                    <span className="text-sm bg-indigo-900 text-indigo-300 px-3 py-1 rounded-md shrink-0">
-                        {film.zanr.naziv}
-                    </span>
+                    <div className="flex gap-2 shrink-0">
+                        <span className="text-sm bg-indigo-900 text-indigo-300 px-3 py-1 rounded-md">
+                            {film.zanr.naziv}
+                        </span>
+                        {uBioskopima && (
+                            <span className="text-sm bg-green-900 text-green-300 px-3 py-1 rounded-md">
+                                U bioskopu
+                            </span>
+                        )}
+                    </div>
                 </div>
 
                 <div className="flex flex-col gap-1">
@@ -76,6 +86,15 @@ export const FilmDetails: FC = () => {
                     <p className="text-xs text-slate-500 uppercase tracking-wider">Godina izdanja</p>
                     <p className="text-slate-300">{film.godinaIzdanja}</p>
                 </div>
+
+                {film.pocetakPrikazivanja && film.krajPrikazivanja && (
+                    <div className="flex flex-col gap-1">
+                        <p className="text-xs text-slate-500 uppercase tracking-wider">Prikazivanje u bioskopu</p>
+                        <p className="text-slate-300">
+                            {new Date(film.pocetakPrikazivanja).toLocaleDateString('sr-RS')} – {new Date(film.krajPrikazivanja).toLocaleDateString('sr-RS')}
+                        </p>
+                    </div>
+                )}
 
                 <div className="flex flex-col gap-1">
                     <p className="text-xs text-slate-500 uppercase tracking-wider">Režiseri</p>

@@ -24,6 +24,8 @@ export const FilmEdit: FC = () => {
                     zanrId: film.zanrId ?? 0,
                     opis: film.opis,
                     izabraniReziseri: film.reziseri.map(r => r.id),
+                    pocetakPrikazivanja: film.pocetakPrikazivanja ?? null,
+                    krajPrikazivanja: film.krajPrikazivanja ?? null,
                 });
             })
             .finally(() => setFetchLoading(false));

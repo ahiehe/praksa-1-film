@@ -59,11 +59,13 @@ namespace praktika1.Controllers
                 Naziv = dto.Naziv,
                 GodinaIzdanja = dto.GodinaIzdanja,
                 ZanrId = dto.ZanrId,
-                Opis = dto.Opis
+                Opis = dto.Opis,
+                PocetakPrikazivanja = dto.PocetakPrikazivanja,
+                KrajPrikazivanja = dto.KrajPrikazivanja
             };
 
 
-            ServiceResult result = await _filmService.CreateFilmAsync(film, dto.IzabraniReziseri);
+            ServiceResult<int> result = await _filmService.CreateFilmAsync(film, dto.IzabraniReziseri);
             if (result.Uspesno)
             {
                 return Ok( new { id = film.Id });
@@ -86,7 +88,9 @@ namespace praktika1.Controllers
                 Naziv = dto.Naziv,
                 GodinaIzdanja = dto.GodinaIzdanja,
                 ZanrId = dto.ZanrId,
-                Opis = dto.Opis
+                Opis = dto.Opis,
+                PocetakPrikazivanja = dto.PocetakPrikazivanja,
+                KrajPrikazivanja = dto.KrajPrikazivanja
             };
 
             ServiceResult result = await _filmService.UpdateFilmAsync(id, film, dto.IzabraniReziseri);

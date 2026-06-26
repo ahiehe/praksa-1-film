@@ -24,4 +24,6 @@ export interface Film {
     zanrId?: number;
     zanr: Zanr;
     reziseri: Reziser[];
+    pocetakPrikazivanja?: string;
+    krajPrikazivanja?: string;
 }
