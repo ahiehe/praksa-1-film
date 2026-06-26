@@ -1,12 +1,12 @@
 // api/filmApi.ts
 import api from './axiosInstance';
-import { Film, Zanr, Reziser, ReziserOption } from '../types/film';
-import { CreateFilmDTO, PaginatedFilmsDTO } from '../types/dto';
+import { Film, Zanr, ReziserOption } from '../types/film';
+import { CreateFilmDTO, FilmQueryDTO, PaginatedFilmsDTO } from '../types/dto';
 
 const CONTROLLER = '/film';
 
-export const getPaginatedFilms = (page: number) =>
-    api.get<PaginatedFilmsDTO>(CONTROLLER, { params: { page } }).then(res => res.data);
+export const getPaginatedFilms = (query: FilmQueryDTO) =>
+    api.get<PaginatedFilmsDTO>(CONTROLLER, { params: query }).then(res => res.data);
 
 export const getFilmById = (id: number) =>
     api.get<Film>(`${CONTROLLER}/${id}`).then(res => res.data);

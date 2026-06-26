@@ -15,3 +15,13 @@ export interface PaginatedFilmsDTO {
     trenutnaStranica: number;
     ukupnoStranica: number;
 }
+
+
+export interface FilmQueryDTO {
+    page: number;
+    search?: string;
+    uBioskopima?: boolean; 
+    godinaOd?: number; 
+    godinaDo?: number;
+    zanrId?: number;
+}

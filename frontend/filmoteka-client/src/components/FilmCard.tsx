@@ -13,7 +13,7 @@ export const FilmCard: FC<FilmCardProps> = ({ film, onDelete }) => {
     const uBioskopima = isUBioskopima(film);
 
     return (
-        <div className="bg-slate-800 border border-slate-700 rounded-xl p-5 flex flex-col gap-2">
+        <div className="bg-slate-800 border border-slate-700 rounded-xl p-5 flex flex-col gap-2 justify-between flex-1">
             <div className="flex justify-between items-start">
                 <div className="flex gap-2">
                     <span className="text-xs bg-indigo-900 text-indigo-300 px-2.5 py-1 rounded-md">
@@ -44,7 +44,7 @@ export const FilmCard: FC<FilmCardProps> = ({ film, onDelete }) => {
                 </div>
             )}
 
-            <div className="flex gap-2 mt-2">
+            <div className="flex gap-2 mt-auto">
                 <Link to={ROUTES.DETAILS(film.id)} className="flex-1 text-center text-sm border border-slate-600 hover:border-slate-400 px-3 py-1.5 rounded-md transition-colors">
                     Detalji
                 </Link>

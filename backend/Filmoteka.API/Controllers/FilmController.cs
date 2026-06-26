@@ -23,9 +23,9 @@ namespace praktika1.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index([FromQuery] int page = 1)
+        public async Task<IActionResult> Index([FromQuery] FilmQueryDTO query)
         {
-            ServiceResult<PaginatedFilmsDTO> result = await _filmService.GetPaginatedFilmsAsync(page, 6);
+            ServiceResult<PaginatedFilmsDTO> result = await _filmService.GetPaginatedFilmsAsync(query, 6);
 
             return Ok(result.Podaci);
         }
