@@ -1,4 +1,6 @@
 using Filmoteka.API.Services.Auth;
+using Filmoteka.API.Services.Reziser;
+using Filmoteka.API.Services.Zanr;
 using MainProjectOOPIII3.Services.Account;
 using MainProjectOOPIII3.Services.Film;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -23,6 +25,8 @@ builder.Services.AddDbContext<MyAppContext>(options =>
 
 builder.Services.AddScoped<IFilmService, FilmService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IReziserService, ReziserService>();
+builder.Services.AddScoped<IZanrService, ZanrService>();
 builder.Services.AddScoped<JwtService>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
