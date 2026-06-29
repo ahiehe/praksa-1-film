@@ -1,5 +1,6 @@
 using Filmoteka.API.Services.Auth;
 using Filmoteka.API.Services.Reziser;
+using Filmoteka.API.Services.Sala;
 using Filmoteka.API.Services.Zanr;
 using MainProjectOOPIII3.Services.Account;
 using MainProjectOOPIII3.Services.Film;
@@ -9,6 +10,7 @@ using Microsoft.IdentityModel.Tokens;
 using praktika1.Data;
 using praktika1.Models;
 using System.Text;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,6 +29,7 @@ builder.Services.AddScoped<IFilmService, FilmService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IReziserService, ReziserService>();
 builder.Services.AddScoped<IZanrService, ZanrService>();
+builder.Services.AddScoped<ISalaService, SalaService>();
 builder.Services.AddScoped<JwtService>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -46,7 +49,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 
 // Add services to the container.
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(options => {
+    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+});
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
