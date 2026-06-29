@@ -38,7 +38,7 @@ namespace Filmoteka.API.Controllers
             return Ok(result.Podaci);
         }
 
-        [HttpPost("/create")]
+        [HttpPost("create")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create([FromBody] CreateSalaDTO sala)
         {

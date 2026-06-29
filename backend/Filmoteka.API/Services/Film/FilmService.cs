@@ -99,6 +99,11 @@ namespace MainProjectOOPIII3.Services.Film
 
         public async Task<ServiceResult<int>> CreateFilmAsync(praktika1.Models.Film film, int[] izabraniReziseri)
         {
+            if (!_context.Zanrovi.Any(z => z.Id == film.ZanrId))
+            {
+                return ServiceResult<int>.Greska("Izabrani žanr ne postoji!");
+            }
+
             if (izabraniReziseri == null || izabraniReziseri.Length == 0)
             {
                 return ServiceResult<int>.Greska("Morate izabrati barem jednog režisera!");
@@ -115,6 +120,10 @@ namespace MainProjectOOPIII3.Services.Film
 
         public async Task<ServiceResult> UpdateFilmAsync(int id, praktika1.Models.Film film, int[] izabraniReziseri)
         {
+            if (!_context.Zanrovi.Any(z => z.Id == film.ZanrId))
+            {
+                return ServiceResult.Greska("Izabrani žanr ne postoji!");
+            }
 
             if (izabraniReziseri == null || izabraniReziseri.Length == 0)
             {

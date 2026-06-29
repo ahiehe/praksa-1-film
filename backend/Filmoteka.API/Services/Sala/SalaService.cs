@@ -43,6 +43,13 @@ namespace Filmoteka.API.Services.Sala
                 return ServiceResult.Greska("Sala sa ovim ID-jem ne postoji.");
             }
 
+            var termin = await _context.Termini.FirstOrDefaultAsync(t => t.SalaId == id);
+
+            if (termin == null)
+            {
+                return ServiceResult.Greska("Sala se ne može obrisati jer je povezana sa terminom.");
+            }
+
             _context.Salas.Remove(sala);
             await _context.SaveChangesAsync();
             return ServiceResult.Ok("Sala je uspešno obrisana.");

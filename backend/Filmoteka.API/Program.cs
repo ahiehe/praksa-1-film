@@ -1,12 +1,14 @@
 using Filmoteka.API.Services.Auth;
 using Filmoteka.API.Services.Reziser;
 using Filmoteka.API.Services.Sala;
+using Filmoteka.API.Services.Termin;
 using Filmoteka.API.Services.Zanr;
 using MainProjectOOPIII3.Services.Account;
 using MainProjectOOPIII3.Services.Film;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using praktika1.Data;
 using praktika1.Models;
 using System.Text;
@@ -30,6 +32,7 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IReziserService, ReziserService>();
 builder.Services.AddScoped<IZanrService, ZanrService>();
 builder.Services.AddScoped<ISalaService, SalaService>();
+builder.Services.AddScoped<ITerminService, TerminService>();
 builder.Services.AddScoped<JwtService>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -54,7 +57,31 @@ builder.Services.AddControllers().AddJsonOptions(options => {
 });
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "Bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header,
+    });
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer" 
+                }
+            },
+            new string[] {}
+        }
+    });
+});
 
 builder.Services.AddCors(options =>
 {
