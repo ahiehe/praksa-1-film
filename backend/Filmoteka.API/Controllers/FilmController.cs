@@ -35,14 +35,13 @@ namespace praktika1.Controllers
         public async Task<IActionResult> DetailsFilm(int id)
         {
             ServiceResult<Film> result = await _filmService.GetFilmByIdAsync(id);
-            Film film = result.Podaci;
 
-            if (film == null)
+            if (!result.Uspesno)
             {
                 return NotFound();
             }
 
-            return Ok(film);
+            return Ok(result.Podaci);
         }
 
         [Authorize(Roles = "Admin")]
@@ -54,21 +53,10 @@ namespace praktika1.Controllers
                 return BadRequest(ModelState);
             }
 
-            var film = new Film
-            {
-                Naziv = dto.Naziv,
-                GodinaIzdanja = dto.GodinaIzdanja,
-                ZanrId = dto.ZanrId,
-                Opis = dto.Opis,
-                PocetakPrikazivanja = dto.PocetakPrikazivanja,
-                KrajPrikazivanja = dto.KrajPrikazivanja
-            };
-
-
-            ServiceResult<int> result = await _filmService.CreateFilmAsync(film, dto.IzabraniReziseri);
+            ServiceResult<int> result = await _filmService.CreateFilmAsync(dto);
             if (result.Uspesno)
             {
-                return Ok( new { id = film.Id });
+                return Ok( new { id = result.Podaci });
             }
 
             return BadRequest(new { message = result.Poruka });
@@ -82,18 +70,9 @@ namespace praktika1.Controllers
             {
                 return BadRequest(ModelState);
             }
+            
 
-            var film = new Film
-            {
-                Naziv = dto.Naziv,
-                GodinaIzdanja = dto.GodinaIzdanja,
-                ZanrId = dto.ZanrId,
-                Opis = dto.Opis,
-                PocetakPrikazivanja = dto.PocetakPrikazivanja,
-                KrajPrikazivanja = dto.KrajPrikazivanja
-            };
-
-            ServiceResult result = await _filmService.UpdateFilmAsync(id, film, dto.IzabraniReziseri);
+            ServiceResult result = await _filmService.UpdateFilmAsync(id, dto);
 
             if (result.Uspesno)
             {

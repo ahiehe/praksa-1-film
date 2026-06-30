@@ -91,26 +91,47 @@ namespace MainProjectOOPIII3.Services.Film
 
         public async Task<ServiceResult<praktika1.Models.Film>> GetFilmByIdAsync(int id)
         {
-            return ServiceResult<praktika1.Models.Film>.Ok(await _context.Filmovi
+            var film = await _context.Filmovi
                .Include(f => f.Zanr)
                .Include(f => f.Reziseri)
-               .FirstOrDefaultAsync(f => f.Id == id));
+               .FirstOrDefaultAsync(f => f.Id == id);
+            if (film == null)
+            {
+                return ServiceResult<praktika1.Models.Film>.Greska("Film ne postoje");
+            }
+            return ServiceResult<praktika1.Models.Film>.Ok(film);
         }
 
-        public async Task<ServiceResult<int>> CreateFilmAsync(praktika1.Models.Film film, int[] izabraniReziseri)
+        public async Task<ServiceResult<int>> CreateFilmAsync(CreateFilmDTO dto)
         {
-            if (!_context.Zanrovi.Any(z => z.Id == film.ZanrId))
+
+            if (!_context.Zanrovi.Any(z => z.Id == dto.ZanrId))
             {
                 return ServiceResult<int>.Greska("Izabrani žanr ne postoji!");
             }
 
-            if (izabraniReziseri == null || izabraniReziseri.Length == 0)
+            if (dto.PocetakPrikazivanja.HasValue && dto.KrajPrikazivanja.HasValue && dto.PocetakPrikazivanja > dto.KrajPrikazivanja)
+            {
+                return ServiceResult<int>.Greska("Datum početka prikazivanja ne može biti veći od datuma kraja prikazivanja!");
+            }
+
+            if (dto.IzabraniReziseri == null || dto.IzabraniReziseri.Length == 0)
             {
                 return ServiceResult<int>.Greska("Morate izabrati barem jednog režisera!");
             }
 
+            var film = new praktika1.Models.Film
+            {
+                Naziv = dto.Naziv,
+                GodinaIzdanja = dto.GodinaIzdanja,
+                ZanrId = dto.ZanrId,
+                Opis = dto.Opis,
+                PocetakPrikazivanja = dto.PocetakPrikazivanja,
+                KrajPrikazivanja = dto.KrajPrikazivanja
+            };
+
             film.Reziseri = await _context.Reziseri
-                    .Where(r => izabraniReziseri.Contains(r.Id))
+                    .Where(r => dto.IzabraniReziseri.Contains(r.Id))
                     .ToListAsync();
 
             _context.Add(film);
@@ -118,14 +139,19 @@ namespace MainProjectOOPIII3.Services.Film
             return ServiceResult<int>.Ok(film.Id);
         }
 
-        public async Task<ServiceResult> UpdateFilmAsync(int id, praktika1.Models.Film film, int[] izabraniReziseri)
+        public async Task<ServiceResult> UpdateFilmAsync(int id, CreateFilmDTO dto)
         {
-            if (!_context.Zanrovi.Any(z => z.Id == film.ZanrId))
+            if (!_context.Zanrovi.Any(z => z.Id == dto.ZanrId))
             {
                 return ServiceResult.Greska("Izabrani žanr ne postoji!");
             }
 
-            if (izabraniReziseri == null || izabraniReziseri.Length == 0)
+            if (dto.PocetakPrikazivanja.HasValue && dto.KrajPrikazivanja.HasValue && dto.PocetakPrikazivanja > dto.KrajPrikazivanja)
+            {
+                return ServiceResult.Greska("Datum početka prikazivanja ne može biti veći od datuma kraja prikazivanja!");
+            }
+
+            if (dto.IzabraniReziseri == null || dto.IzabraniReziseri.Length == 0)
             {
                 return ServiceResult.Greska("Morate izabrati barem jednog režisera!");
             }
@@ -136,16 +162,16 @@ namespace MainProjectOOPIII3.Services.Film
 
             if (filmIzBaze == null) return ServiceResult.Greska("Film nije pronadjen");
 
-            filmIzBaze.Naziv = film.Naziv;
-            filmIzBaze.GodinaIzdanja = film.GodinaIzdanja;
-            filmIzBaze.ZanrId = film.ZanrId;
-            filmIzBaze.Opis = film.Opis;
-            filmIzBaze.PocetakPrikazivanja = film.PocetakPrikazivanja;
-            filmIzBaze.KrajPrikazivanja = film.KrajPrikazivanja;
+            filmIzBaze.Naziv = dto.Naziv;
+            filmIzBaze.GodinaIzdanja = dto.GodinaIzdanja;
+            filmIzBaze.ZanrId = dto.ZanrId;
+            filmIzBaze.Opis = dto.Opis;
+            filmIzBaze.PocetakPrikazivanja = dto.PocetakPrikazivanja;
+            filmIzBaze.KrajPrikazivanja = dto.KrajPrikazivanja;
 
             filmIzBaze.Reziseri.Clear();
             var noviReziseri = await _context.Reziseri
-                .Where(r => izabraniReziseri.Contains(r.Id))
+                .Where(r => dto.IzabraniReziseri.Contains(r.Id))
                 .ToListAsync();
 
             foreach (var reziser in noviReziseri)

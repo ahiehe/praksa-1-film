@@ -1,12 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace praktika1.Models
+namespace Filmoteka.API.DTOs
 {
-    public class LoginValidationModel
+    public class LoginDTO
     {
         [Required(ErrorMessage = "Korisničko ime ili email je obavezno.")]
         public string UsernameOrEmail { get; set; }
-
         [Required(ErrorMessage = "Lozinka je obavezna.")]
         public string Password { get; set; }
     }

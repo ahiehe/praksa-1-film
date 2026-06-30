@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using praktika1.Data;
-using praktika1.Models;
 
 namespace praktika1.Controllers
 {
@@ -20,7 +19,7 @@ namespace praktika1.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] RegisterValidationModel podatke)
+        public async Task<IActionResult> Register([FromBody] RegisterDTO podatke)
         {
             if (!ModelState.IsValid)
             {
@@ -39,11 +38,11 @@ namespace praktika1.Controllers
 
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LoginValidationModel podatke)
+        public async Task<IActionResult> Login([FromBody] LoginDTO podatke)
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(new { message = "Neispravno ime/email ili lozinka." });
+                return BadRequest(ModelState);
             }
 
             ServiceResult<AuthResponseDTO> result = await _authService.LoginAsync(podatke);

@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace praktika1.Models
+namespace Filmoteka.API.DTOs
 {
-    public class RegisterValidationModel
+    public class RegisterDTO
     {
         [Required(ErrorMessage = "Korisničko ime je obavezno.")]
         [StringLength(50, MinimumLength = 3, ErrorMessage = "Korisničko ime mora imati između 3 i 50 karaktera.")]

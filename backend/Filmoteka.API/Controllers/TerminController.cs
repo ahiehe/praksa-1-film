@@ -45,6 +45,11 @@ namespace Filmoteka.API.Controllers
                 return Unauthorized(new { message = "Korisnik nije autentifikovan." });
             }
 
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             ServiceResult result = await _terminService.RezervisiAsync(dto.TerminId, userId);
             if (!result.Uspesno)
             {
