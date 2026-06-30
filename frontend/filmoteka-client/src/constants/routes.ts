@@ -7,4 +7,11 @@ export const ROUTES = {
     DETAILS_PATTERN: `/details/:id`,
     LOGIN: '/login',
     REGISTER: '/register',
+
+    TERMINI: '/termini',
+    TERMIN_DETAILS: (id: number | string) => `/termini/${id}`,
+    TERMIN_DETAILS_PATTERN: '/termini/:id',
+    TERMIN_CREATE: '/termini/create',
+
+    SALA_CREATE: '/sale/create',
 } as const;

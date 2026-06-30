@@ -15,18 +15,12 @@ namespace MainProjectOOPIII3.Services.Film
             _context = context;
         }
 
-        public async Task<ServiceResult<List<Zanr>>> GetZanroviAsync()
+        public async Task<ServiceResult<List<FilmOptionDTO>>> GetFilmOptionsAsync()
         {
-            var zanrovi = await _context.Zanrovi.ToListAsync();
-            return ServiceResult<List<Zanr>>.Ok(zanrovi);
-        }
-
-        public async Task<ServiceResult<List<ReziserDTO>>> GetReziseriAsync()
-        {
-            var reziseri = await _context.Reziseri
-                 .Select(r => new ReziserDTO { Id = r.Id, Ime = r.Ime, Prezime = r.Prezime })
-                 .ToListAsync();
-            return ServiceResult<List<ReziserDTO>>.Ok(reziseri);
+            var filmovi = await _context.Filmovi
+                .Select(f => new FilmOptionDTO { Id = f.Id, Naziv = f.Naziv })
+                .ToListAsync();
+            return ServiceResult<List<FilmOptionDTO>>.Ok(filmovi);
         }
 
         public async Task<ServiceResult<PaginatedFilmsDTO>> GetPaginatedFilmsAsync(FilmQueryDTO filters, int pageSize)

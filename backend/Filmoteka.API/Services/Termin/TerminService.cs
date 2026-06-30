@@ -1,4 +1,5 @@
 ﻿using Filmoteka.API.DTOs;
+using Filmoteka.API.Models;
 using Filmoteka.API.Models.Filmoteka.API.Models;
 using MainProjectOOPIII3.Services;
 using Microsoft.EntityFrameworkCore;
@@ -64,25 +65,42 @@ namespace Filmoteka.API.Services.Termin
             return ServiceResult.Ok("Termin uspešno obrisan.");
         }
 
-        public async Task<ServiceResult<TerminInfoDTO>> GetTerminInfoByIdAsync(int id)
+        public async Task<ServiceResult<TerminDetailsDTO>> GetTerminDetailsByIdAsync(int id, int korisnikId)
         {
             var termin = await _context.Termini
-                .Where(t => t.Id == id)
-                .Select(t => new TerminInfoDTO
-                {
-                    Id = t.Id,
-                    NazivFilma = t.Film.Naziv,
-                    NazivSale = t.Sala.Naziv,
-                    BrojDostupnihMesta = t.BrojDostupnihMesta,
-                    PocetakProjekcije = t.PocetakProjekcije,
-                    KrajProjekcije = t.KrajProjekcije
-                })
-                .FirstOrDefaultAsync();
+                .Include(t => t.Film).ThenInclude(f => f.Zanr)
+                .Include(t => t.Film).ThenInclude(f => f.Reziseri)
+                .Include(t => t.Sala)
+                .FirstOrDefaultAsync(t => t.Id == id);
 
-            return ServiceResult<TerminInfoDTO>.Ok(termin);
+            if (termin == null)
+            {
+                return ServiceResult<TerminDetailsDTO>.Greska("Termin nije pronađen.");
+            }
+
+            bool vecRezervisan = await _context.Rezervacije.AnyAsync(r => r.TerminId == id && r.UserId == korisnikId);
+
+            TerminDetailsDTO details =  new TerminDetailsDTO
+                {
+                    Id = termin.Id,
+                    NazivFilma = termin.Film.Naziv,
+                    NazivSale = termin.Sala.Naziv,
+                    BrojDostupnihMesta = termin.BrojDostupnihMesta,
+                    PocetakProjekcije = termin.PocetakProjekcije,
+                    KrajProjekcije = termin.KrajProjekcije,
+                    OpisFilma = termin.Film.Opis,
+                    GodinaIzdanja = termin.Film.GodinaIzdanja,
+                    ZanrNaziv = termin.Film.Zanr.Naziv,
+                    Reziseri = termin.Film.Reziseri.Select(r => r.Ime).ToList(),
+                    KapacitetSale = termin.Sala.Kapacitet,
+                    VecRezervisano = vecRezervisan,
+                    TipSale = termin.Sala.Tip
+            };
+
+            return ServiceResult<TerminDetailsDTO>.Ok(details);
         }
 
-        public async Task<ServiceResult<List<TerminInfoDTO>>> GetTerminiInfoAsync()
+        public async Task<ServiceResult<List<TerminInfoDTO>>> GetActiveTerminiInfoAsync()
         {
             var termini = await _context.Termini
                 .Select(t => new TerminInfoDTO
@@ -92,8 +110,10 @@ namespace Filmoteka.API.Services.Termin
                     NazivSale = t.Sala.Naziv,
                     BrojDostupnihMesta = t.BrojDostupnihMesta,
                     PocetakProjekcije = t.PocetakProjekcije,
-                    KrajProjekcije = t.KrajProjekcije
+                    KrajProjekcije = t.KrajProjekcije,
+                    TipSale = t.Sala.Tip
                 })
+                .Where(t => t.PocetakProjekcije > DateTime.Now)
                 .ToListAsync();
 
             return ServiceResult<List<TerminInfoDTO>>.Ok(termini);
@@ -108,18 +128,18 @@ namespace Filmoteka.API.Services.Termin
                 return ServiceResult.Greska("Termin nije pronađen.");
             }
 
-            if (_context.Salas.Find(termin.SalaId) == null)
+            if (await _context.Salas.FindAsync(termin.SalaId) == null)
             {
                 return ServiceResult<int>.Greska("Sala sa datim ID-jem ne postoji.");
             }
-            if (_context.Filmovi.Find(termin.FilmId) == null)
+            if (await _context.Filmovi.FindAsync(termin.FilmId) == null)
             {
                 return ServiceResult<int>.Greska("Film sa datim ID-jem ne postoji.");
             }
 
-            bool terminPostoje = _context.Termini.Any(t => t.SalaId == termin.SalaId &&
-                termin.PocetakProjekcije < t.KrajProjekcije.AddMinutes(15) &&
-                termin.KrajProjekcije > t.PocetakProjekcije.AddMinutes(-15));
+            bool terminPostoje = await _context.Termini.AnyAsync(t => t.Id != id && t.SalaId == termin.SalaId &&
+                        termin.PocetakProjekcije < t.KrajProjekcije.AddMinutes(15) &&
+                        termin.KrajProjekcije > t.PocetakProjekcije.AddMinutes(-15));
 
             if (terminPostoje)
             {

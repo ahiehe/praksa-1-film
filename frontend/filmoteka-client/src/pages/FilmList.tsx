@@ -3,11 +3,12 @@ import { ROUTES } from '../constants/routes';
 import { Link } from 'react-router-dom';
 import { FilmQueryDTO, PaginatedFilmsDTO } from '../types/dto';
 import { Zanr } from '../types/film';
-import { deleteFilm, getPaginatedFilms, getZanrovi } from '../api/filmApi';
+import { deleteFilm, getPaginatedFilms} from '../api/filmApi';
 import { FilmCard } from '../components/FilmCard';
 import { Pagination } from '../components/Pagination';
 import { Loading } from '../components/Loading';
 import { isUserAdmin } from '../utils/storage';
+import { getZanrovi } from '../api/zanrApi';
 
 export default function FilmList() {
     const [loading, setLoading] = useState(true);

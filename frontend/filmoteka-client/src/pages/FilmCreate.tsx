@@ -4,8 +4,8 @@ import { createFilm } from '../api/filmApi';
 import { CreateFilmDTO } from '../types/dto';
 import { FilmForm } from '../components/FilmForm';
 import { ROUTES } from '../constants/routes';
-import axios from 'axios';
 import toast from 'react-hot-toast';
+import { getErrorMessage } from '../utils/errorUtils';
 
 export const FilmCreate: FC = () => {
     const navigate = useNavigate();
@@ -18,10 +18,7 @@ export const FilmCreate: FC = () => {
                 toast.success('Film je uspešno dodat!');
                 navigate(ROUTES.DETAILS(res.id))
             })
-            .catch(err => toast.error(axios.isAxiosError(err)
-                ? err.response?.data?.message ?? 'Greška pri kreiranju.'
-                : 'Greška.'
-            ))
+            .catch(err => toast.error(getErrorMessage(err)))
             .finally(() => setLoading(false));
     };
 

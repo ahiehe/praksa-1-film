@@ -5,8 +5,8 @@ import { CreateFilmDTO } from '../types/dto';
 import { FilmForm } from '../components/FilmForm';
 import { ROUTES } from '../constants/routes';
 import { Loading } from '../components/Loading';
-import axios from 'axios';
 import toast from 'react-hot-toast';
+import { getErrorMessage } from '../utils/errorUtils';
 
 export const FilmEdit: FC = () => {
     const { id } = useParams();
@@ -35,13 +35,10 @@ export const FilmEdit: FC = () => {
         setLoading(true);
         updateFilm(Number(id), dto)
             .then(() => {
-                toast.success("Film je promenjen!");
+                toast.success("Film je promenjen");
                 navigate(ROUTES.DETAILS(Number(id)));
             })
-            .catch(err => toast.error(axios.isAxiosError(err)
-                ? err.response?.data?.message ?? 'Greška pri izmeni.'
-                : 'Greška.'
-            ))
+            .catch(err => toast.error(getErrorMessage(err)))
             .finally(() => setLoading(false));
     };
 

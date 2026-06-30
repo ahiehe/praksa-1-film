@@ -27,3 +27,8 @@ export interface Film {
     pocetakPrikazivanja?: string;
     krajPrikazivanja?: string;
 }
+
+export interface FilmOption {
+    id: number;
+    naziv: string;
+}

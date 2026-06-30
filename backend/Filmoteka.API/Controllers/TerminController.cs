@@ -18,15 +18,23 @@ namespace Filmoteka.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllTermini()
+        public async Task<IActionResult> GetAllActiveTermini()
         {
-            ServiceResult<List<TerminInfoDTO>> result = await _terminService.GetTerminiInfoAsync();
+            ServiceResult<List<TerminInfoDTO>> result = await _terminService.GetActiveTerminiInfoAsync();
             return Ok(result.Podaci);
         }
+
         [HttpGet("{id}")]
         public async Task<IActionResult> GetTerminById(int id)
         {
-            ServiceResult<TerminInfoDTO> result = await _terminService.GetTerminInfoByIdAsync(id);
+            string userIdString = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (string.IsNullOrEmpty(userIdString) || !int.TryParse(userIdString, out int userId))
+            {
+                return Unauthorized(new { message = "Korisnik nije autentifikovan." });
+            }
+
+            ServiceResult<TerminDetailsDTO> result = await _terminService.GetTerminDetailsByIdAsync(id, userId);
             if (result == null)
             {
                 return NotFound();

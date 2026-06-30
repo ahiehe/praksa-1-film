@@ -31,3 +31,7 @@ export const isUserAdmin = (): boolean => {
     return getRoleFromToken() === "Admin";
 }
 
+export const isUserEmployee = (): boolean => {
+    return getRoleFromToken() === "Employee";
+}
+

@@ -25,3 +25,31 @@ export interface FilmQueryDTO {
     godinaDo?: number;
     zanrId?: number;
 }
+
+
+export interface RezervacijaTerminaDTO {
+    terminId: number;
+}
+
+export interface CreateTerminDTO {
+    salaId: number;
+    filmId: number;
+    pocetakProjekcije: string;
+    krajProjekcije: string;
+}
+
+export interface CreateSalaDTO {
+    naziv: string;
+    kapacitet: number;
+    tip: TipSale;
+}
+
+export interface CreateReziserDTO {
+    ime: string;
+    prezime: string;
+    datumRodjenja: string;
+}
+
+export interface CreateZanrDTO {
+    naziv: string;
+}

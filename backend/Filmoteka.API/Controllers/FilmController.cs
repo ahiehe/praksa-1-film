@@ -30,6 +30,13 @@ namespace praktika1.Controllers
             return Ok(result.Podaci);
         }
 
+        [HttpGet("options")]
+        public async Task<IActionResult> GetFilmOptions()
+        {
+            ServiceResult<List<FilmOptionDTO>> result = await _filmService.GetFilmOptionsAsync();
+            return Ok(result.Podaci);
+        }
+
 
         [HttpGet("{id}")]
         public async Task<IActionResult> DetailsFilm(int id)
@@ -91,21 +98,5 @@ namespace praktika1.Controllers
 
             return Ok(new { message = "Film je obrisan" });
         }
-
-        [HttpGet("zanrovi")]
-        public async Task<IActionResult> GetZanrovi()
-        {
-            var result = await _filmService.GetZanroviAsync();
-
-            return Ok(result.Podaci);
-        }
-
-        [HttpGet("reziseri")]
-        public async Task<IActionResult> GetReziseri()
-        {
-            var result = await _filmService.GetReziseriAsync();
-            return Ok(result.Podaci);
-        }
-
     }
 }

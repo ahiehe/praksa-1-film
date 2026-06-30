@@ -8,6 +8,7 @@ import { ROUTES } from '../constants/routes';
 import { Register as RegisterType } from '../types/auth';
 import toast from 'react-hot-toast';
 import axios from 'axios';
+import { getErrorMessage } from '../utils/errorUtils';
 
 export const Register: FC = () => {
     const navigate = useNavigate();
@@ -21,15 +22,7 @@ export const Register: FC = () => {
                 saveAuth(res.token, res.username);
                 window.location.href = ROUTES.HOME;
             })
-            .catch(err => {
-                if (axios.isAxiosError(err)) {
-                    const data = err.response?.data;
-                    const firstError = data?.errors
-                        ? Object.values(data.errors).flat()[0] as string
-                        : null;
-                    toast.error(firstError ?? data?.message ?? 'Greška pri registraciji.');
-                }
-            })
+            .catch(err => toast.error(getErrorMessage(err)))
             .finally(() => setLoading(false));
     };
 
