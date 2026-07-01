@@ -39,6 +39,8 @@ namespace Filmoteka.API.Controllers
                 return BadRequest(ModelState);
 
             var result = await _reziserService.CreateAsync(dto);
+            if (!result.Uspesno)
+                return BadRequest(new { message = result.Poruka });
             return Ok(new { id = result.Podaci });
         }
 
@@ -54,7 +56,8 @@ namespace Filmoteka.API.Controllers
             return Ok(new { message = "Režiser je promenjen." });
         }
 
-        
+
+        [Authorize(Roles = "Admin")]
         [HttpDelete("delete/{id}")]
         public async Task<IActionResult> Delete(int id)
         {

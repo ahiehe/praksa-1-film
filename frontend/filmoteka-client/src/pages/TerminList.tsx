@@ -24,7 +24,7 @@ export const TerminList: FC = () => {
     return (
         <div>
             <div className="flex justify-between items-center mb-6">
-                <h1 className="text-2xl font-medium">Termini</h1>
+                <h1 className="text-2xl font-medium">Projekcije</h1>
                 {canManage && (
                     <Link to={ROUTES.TERMIN_CREATE} className="bg-indigo-600 hover:bg-indigo-500 px-4 py-2 rounded-md text-sm font-medium transition-colors">
                         + Dodaj termin
@@ -33,7 +33,7 @@ export const TerminList: FC = () => {
             </div>
 
             {termini?.length === 0 && (
-                <p className="text-slate-400 text-center py-16">Nema aktivnih termina.</p>
+                <p className="text-slate-400 text-center py-16">Nema aktivnih projekcija.</p>
             )}
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">

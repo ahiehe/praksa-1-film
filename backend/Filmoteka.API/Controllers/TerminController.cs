@@ -35,9 +35,9 @@ namespace Filmoteka.API.Controllers
             }
 
             ServiceResult<TerminDetailsDTO> result = await _terminService.GetDetailsByIdAsync(id, userId);
-            if (result == null)
+            if (!result.Uspesno)
             {
-                return NotFound();
+                return NotFound(new { message = result.Poruka });
             }
             return Ok(result.Podaci);
         }

@@ -22,6 +22,7 @@ namespace Filmoteka.API.Controllers
             return Ok(result.Podaci);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost("create")]
         public async Task<IActionResult> Create([FromBody] CreateZanrDTO dto)
         {
@@ -29,6 +30,8 @@ namespace Filmoteka.API.Controllers
                 return BadRequest(ModelState);
 
             var result = await _ZanrService.CreateAsync(dto);
+            if (!result.Uspesno)
+                return BadRequest(new { message = result.Poruka });
             return Ok(new { id = result.Podaci });
         }
 
