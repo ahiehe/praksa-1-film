@@ -13,12 +13,18 @@ namespace Filmoteka.API.Services.Reziser
             _context = context;
         }
 
-        public async Task<ServiceResult<List<ReziserDTO>>> GetAllAsync()
+        public async Task<ServiceResult<List<ReziserOptionDTO>>> GetOptionsAsync()
         {
             var reziseri = await _context.Reziseri
-                 .Select(r => new ReziserDTO { Id = r.Id, Ime = r.Ime, Prezime = r.Prezime })
+                 .Select(r => new ReziserOptionDTO { Id = r.Id, Ime = r.Ime, Prezime = r.Prezime })
                  .ToListAsync();
-            return ServiceResult<List<ReziserDTO>>.Ok(reziseri);
+            return ServiceResult<List<ReziserOptionDTO>>.Ok(reziseri);
+        }
+
+        public async Task<ServiceResult<List<praktika1.Models.Reziser>>> GetAllAsync()
+        {
+            var reziseri = await _context.Reziseri.ToListAsync();
+            return ServiceResult<List<praktika1.Models.Reziser>>.Ok(reziseri);
         }
 
         public async Task<ServiceResult<int>> CreateAsync(CreateReziserDTO dto)
@@ -48,6 +54,12 @@ namespace Filmoteka.API.Services.Reziser
 
         public async Task<ServiceResult> DeleteAsync(int id)
         {
+            bool imaFilmova = await _context.Reziseri
+                    .Where(r => r.Id == id)
+                    .AnyAsync(r => r.Filmovi.Any());
+            if (imaFilmova)
+                return ServiceResult.Greska("Ne možete obrisati rezisera koji ima filmove.");
+
             var reziser = await _context.Reziseri.FindAsync(id);
             if (reziser == null) return ServiceResult.Greska("Režiser nije pronađen.");
 

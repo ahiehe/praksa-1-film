@@ -1,5 +1,4 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-
 import {Layout} from './components/Layout';
 import FilmList from './pages/FilmList';
 import { FilmCreate } from './pages/FilmCreate';
@@ -15,6 +14,10 @@ import { SalaCreate } from './pages/SalaCreate';
 import { TerminCreate } from './pages/TerminCreate';
 import { TerminList } from './pages/TerminList';
 import { TerminDetails } from './pages/TerminDetails';
+import { AdminPanel } from './pages/AdminPanel';
+import { SalaList } from './pages/SalaList';
+import { ReziserList } from './pages/ReziserList';
+import { ZanrList } from './pages/ZanrList';
 
 const router = createBrowserRouter([
     {
@@ -35,9 +38,13 @@ const router = createBrowserRouter([
             {
                 element: <AdminRoute />,
                 children: [
+                    { path: ROUTES.ADMIN_PANEL, element: <AdminPanel /> },
                     { path: ROUTES.EDIT_PATTERN, element: <FilmEdit /> },
                     { path: ROUTES.CREATE, element: <FilmCreate /> },
+                    { path: ROUTES.SALA_LIST, element: <SalaList />},
                     { path: ROUTES.SALA_CREATE, element: <SalaCreate /> },
+                    { path: ROUTES.REZISER_LIST, element: <ReziserList /> },
+                    { path: ROUTES.ZANR_LIST, element: <ZanrList /> },
                 ]
             },
             {

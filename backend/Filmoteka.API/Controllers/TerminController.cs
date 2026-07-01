@@ -34,7 +34,7 @@ namespace Filmoteka.API.Controllers
                 return Unauthorized(new { message = "Korisnik nije autentifikovan." });
             }
 
-            ServiceResult<TerminDetailsDTO> result = await _terminService.GetTerminDetailsByIdAsync(id, userId);
+            ServiceResult<TerminDetailsDTO> result = await _terminService.GetDetailsByIdAsync(id, userId);
             if (result == null)
             {
                 return NotFound();
@@ -74,7 +74,7 @@ namespace Filmoteka.API.Controllers
             {
                 return BadRequest(ModelState);
             }
-            ServiceResult<int> result = await _terminService.CreateTerminAsync(terminDto);
+            ServiceResult<int> result = await _terminService.CreateAsync(terminDto);
             if (!result.Uspesno)
             {
                 return BadRequest(new { message = result.Poruka });
@@ -91,7 +91,7 @@ namespace Filmoteka.API.Controllers
                 return BadRequest(ModelState);
             }
 
-            ServiceResult result = await _terminService.UpdateTerminAsync(id, terminDto);
+            ServiceResult result = await _terminService.UpdateAsync(id, terminDto);
 
             if (!result.Uspesno)
             {
@@ -104,7 +104,7 @@ namespace Filmoteka.API.Controllers
         [Authorize(Roles = "Employee, Admin")]
         public async Task<IActionResult> DeleteTermin(int id)
         {
-            ServiceResult result = await _terminService.DeleteTerminAsync(id);
+            ServiceResult result = await _terminService.DeleteAsync(id);
             if (!result.Uspesno)
             {
                 return NotFound(new { message = result.Poruka });

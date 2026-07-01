@@ -31,6 +31,11 @@ export const TerminCreate: FC = () => {
     }, []);
 
     const handleSubmit = () => {
+        if (!form.pocetakProjekcije || !form.krajProjekcije) {
+            toast.error('Unesite vreme početka i kraja projekcije.');
+            return;
+        }
+
         setLoading(true);
         createTermin(form)
             .then(() => {

@@ -23,14 +23,14 @@ namespace Filmoteka.API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            ServiceResult<List<Sala>> result = await _salaService.GetSaleAsync();
+            ServiceResult<List<Sala>> result = await _salaService.GetAllAsync();
             return Ok(result.Podaci);
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
-            ServiceResult<Sala> result = await _salaService.GetSalaByIdAsync(id);
+            ServiceResult<Sala> result = await _salaService.GetByIdAsync(id);
             if (!result.Uspesno)
             {
                 return NotFound(new { message = result.Poruka });
@@ -47,7 +47,7 @@ namespace Filmoteka.API.Controllers
                 return BadRequest(ModelState);
             }
 
-            ServiceResult<int> result = await _salaService.CreateSalaAsync(sala);
+            ServiceResult<int> result = await _salaService.CreateAsync(sala);
             if (!result.Uspesno)
             {
                 return BadRequest(new { message = result.Poruka });
@@ -60,7 +60,7 @@ namespace Filmoteka.API.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int id)
         {
-            ServiceResult result = await _salaService.DeleteSalaAsync(id);
+            ServiceResult result = await _salaService.DeleteAsync(id);
             if (!result.Uspesno)
             {
                 return NotFound(new { message = result.Poruka });

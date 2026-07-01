@@ -5,9 +5,9 @@ namespace Filmoteka.API.Services.Sala
 {
     public interface ISalaService
     {
-        public Task<ServiceResult<List<Models.Sala>>> GetSaleAsync();
-        public Task<ServiceResult<Models.Sala>> GetSalaByIdAsync(int id);
-        public Task<ServiceResult<int>> CreateSalaAsync(CreateSalaDTO sala);
-        public Task<ServiceResult> DeleteSalaAsync(int id);
+        public Task<ServiceResult<List<Models.Sala>>> GetAllAsync();
+        public Task<ServiceResult<Models.Sala>> GetByIdAsync(int id);
+        public Task<ServiceResult<int>> CreateAsync(CreateSalaDTO sala);
+        public Task<ServiceResult> DeleteAsync(int id);
     }
 }

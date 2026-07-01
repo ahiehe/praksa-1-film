@@ -1,5 +1,7 @@
 ﻿using Filmoteka.API.DTOs;
 using Filmoteka.API.Services.Reziser;
+using MainProjectOOPIII3.Services;
+using MainProjectOOPIII3.Services.Film;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,6 +21,13 @@ namespace Filmoteka.API.Controllers
         public async Task<IActionResult> GetAll()
         {
             var result = await _reziserService.GetAllAsync();
+            return Ok(result.Podaci);
+        }
+
+        [HttpGet("options")]
+        public async Task<IActionResult> GetOptions()
+        {
+            ServiceResult<List<ReziserOptionDTO>> result = await _reziserService.GetOptionsAsync();
             return Ok(result.Podaci);
         }
 

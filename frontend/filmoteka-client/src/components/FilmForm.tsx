@@ -1,9 +1,10 @@
 import { FC, useEffect, useState } from 'react';
-import { Zanr,  ReziserOption } from '../types/film';
 import { CreateFilmDTO } from '../types/dto';
 import { FormInput } from './FormInput';
 import { getZanrovi } from '../api/zanrApi';
-import { getReziseri } from '../api/reziserApi';
+import { getReziseriOptions } from '../api/reziserApi';
+import { Zanr } from '../types/zanr';
+import { ReziserOption } from '../types/reziser';
 
 interface FilmFormProps {
     initial?: CreateFilmDTO;
@@ -29,7 +30,7 @@ export const FilmForm: FC<FilmFormProps> = ({ initial, onSubmit, loading, submit
 
     useEffect(() => {
         getZanrovi().then(setZanrovi);
-        getReziseri().then(setReziseri);
+        getReziseriOptions().then(setReziseri);
     }, []);
 
     const toggleReziser = (id: number) => {

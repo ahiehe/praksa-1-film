@@ -1,11 +1,14 @@
 import api from './axiosInstance';
-import { ReziserOption } from '../types/film';
 import { CreateReziserDTO } from '../types/dto';
+import { Reziser, ReziserOption } from '../types/reziser';
 
 const CONTROLLER = '/reziser';
 
 export const getReziseri = () =>
-    api.get<ReziserOption[]>(CONTROLLER).then(res => res.data);
+    api.get<Reziser[]>(CONTROLLER).then(res => res.data);
+
+export const getReziseriOptions = () =>
+    api.get<ReziserOption[]>(`${CONTROLLER}/options`).then(res => res.data);
 
 export const createReziser = (dto: CreateReziserDTO) =>
     api.post<{ id: number }>(`${CONTROLLER}/create`, dto).then(res => res.data);

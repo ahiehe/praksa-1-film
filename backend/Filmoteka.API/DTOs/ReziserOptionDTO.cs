@@ -1,6 +1,6 @@
 ﻿namespace Filmoteka.API.DTOs
 {
-    public class ReziserDTO
+    public class ReziserOptionDTO
     {
         public int Id { get; set; }
         public string Ime { get; set; }

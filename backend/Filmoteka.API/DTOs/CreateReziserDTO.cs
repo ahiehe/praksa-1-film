@@ -12,7 +12,6 @@ namespace Filmoteka.API.DTOs
         [StringLength(50, ErrorMessage = "Prezime ne sme biti duže od 50 karaktera.")]
         public string Prezime { get; set; }
 
-        [Required(ErrorMessage = "Datum rođenja je obavezan.")]
-        public DateTime DatumRodjenja { get; set; }
+        public DateTime? DatumRodjenja { get; set; }
     }
 }

@@ -5,7 +5,8 @@ namespace Filmoteka.API.Services.Reziser
 {
     public interface IReziserService
     {
-        Task<ServiceResult<List<ReziserDTO>>> GetAllAsync();
+        Task<ServiceResult<List<ReziserOptionDTO>>> GetOptionsAsync();
+        Task<ServiceResult<List<praktika1.Models.Reziser>>> GetAllAsync();
         Task<ServiceResult<int>> CreateAsync(CreateReziserDTO dto);
         Task<ServiceResult> UpdateAsync(int id, CreateReziserDTO dto);
         Task<ServiceResult> DeleteAsync(int id);

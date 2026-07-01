@@ -33,7 +33,7 @@ namespace praktika1.Controllers
         [HttpGet("options")]
         public async Task<IActionResult> GetFilmOptions()
         {
-            ServiceResult<List<FilmOptionDTO>> result = await _filmService.GetFilmOptionsAsync();
+            ServiceResult<List<FilmOptionDTO>> result = await _filmService.GetOptionsAsync();
             return Ok(result.Podaci);
         }
 
@@ -41,7 +41,7 @@ namespace praktika1.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> DetailsFilm(int id)
         {
-            ServiceResult<Film> result = await _filmService.GetFilmByIdAsync(id);
+            ServiceResult<Film> result = await _filmService.GetByIdAsync(id);
 
             if (!result.Uspesno)
             {
@@ -60,7 +60,7 @@ namespace praktika1.Controllers
                 return BadRequest(ModelState);
             }
 
-            ServiceResult<int> result = await _filmService.CreateFilmAsync(dto);
+            ServiceResult<int> result = await _filmService.CreateAsync(dto);
             if (result.Uspesno)
             {
                 return Ok( new { id = result.Podaci });
@@ -79,7 +79,7 @@ namespace praktika1.Controllers
             }
             
 
-            ServiceResult result = await _filmService.UpdateFilmAsync(id, dto);
+            ServiceResult result = await _filmService.UpdateAsync(id, dto);
 
             if (result.Uspesno)
             {
@@ -94,7 +94,7 @@ namespace praktika1.Controllers
         public async Task<IActionResult> DeleteFilm(int id)
         {
             
-            await _filmService.DeleteFilmAsync(id);
+            await _filmService.DeleteAsync(id);
 
             return Ok(new { message = "Film je obrisan" });
         }

@@ -1,6 +1,6 @@
 import api from './axiosInstance';
-import { Zanr } from '../types/film';
 import { CreateZanrDTO } from '../types/dto';
+import { Zanr } from '../types/zanr';
 
 const CONTROLLER = '/zanr';
 

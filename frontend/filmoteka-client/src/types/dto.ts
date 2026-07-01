@@ -1,4 +1,5 @@
 import { Film } from "./film";
+import { TipSale } from "./sala";
 
 export interface CreateFilmDTO {
     naziv: string;
@@ -47,7 +48,7 @@ export interface CreateSalaDTO {
 export interface CreateReziserDTO {
     ime: string;
     prezime: string;
-    datumRodjenja: string;
+    datumRodjenja?: string;
 }
 
 export interface CreateZanrDTO {

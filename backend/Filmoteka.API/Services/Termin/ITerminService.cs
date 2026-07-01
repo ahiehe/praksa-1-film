@@ -6,10 +6,10 @@ namespace Filmoteka.API.Services.Termin
     public interface ITerminService
     {
         public Task<ServiceResult<List<TerminInfoDTO>>> GetActiveTerminiInfoAsync();
-        public Task<ServiceResult<TerminDetailsDTO>> GetTerminDetailsByIdAsync(int id, int korisnikId);
-        public Task<ServiceResult<int>> CreateTerminAsync(CreateTerminDTO termin);
-        public Task<ServiceResult> UpdateTerminAsync(int id, CreateTerminDTO termin);
-        public Task<ServiceResult> DeleteTerminAsync(int id);
+        public Task<ServiceResult<TerminDetailsDTO>> GetDetailsByIdAsync(int id, int korisnikId);
+        public Task<ServiceResult<int>> CreateAsync(CreateTerminDTO termin);
+        public Task<ServiceResult> UpdateAsync(int id, CreateTerminDTO termin);
+        public Task<ServiceResult> DeleteAsync(int id);
         public Task<ServiceResult> RezervisiAsync(int terminId, int korisnikId);
     }
 }

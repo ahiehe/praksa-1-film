@@ -15,7 +15,7 @@ namespace MainProjectOOPIII3.Services.Film
             _context = context;
         }
 
-        public async Task<ServiceResult<List<FilmOptionDTO>>> GetFilmOptionsAsync()
+        public async Task<ServiceResult<List<FilmOptionDTO>>> GetOptionsAsync()
         {
             var filmovi = await _context.Filmovi
                 .Select(f => new FilmOptionDTO { Id = f.Id, Naziv = f.Naziv })
@@ -83,7 +83,7 @@ namespace MainProjectOOPIII3.Services.Film
             });
         }
 
-        public async Task<ServiceResult<praktika1.Models.Film>> GetFilmByIdAsync(int id)
+        public async Task<ServiceResult<praktika1.Models.Film>> GetByIdAsync(int id)
         {
             var film = await _context.Filmovi
                .Include(f => f.Zanr)
@@ -96,7 +96,7 @@ namespace MainProjectOOPIII3.Services.Film
             return ServiceResult<praktika1.Models.Film>.Ok(film);
         }
 
-        public async Task<ServiceResult<int>> CreateFilmAsync(CreateFilmDTO dto)
+        public async Task<ServiceResult<int>> CreateAsync(CreateFilmDTO dto)
         {
 
             if (!_context.Zanrovi.Any(z => z.Id == dto.ZanrId))
@@ -133,7 +133,7 @@ namespace MainProjectOOPIII3.Services.Film
             return ServiceResult<int>.Ok(film.Id);
         }
 
-        public async Task<ServiceResult> UpdateFilmAsync(int id, CreateFilmDTO dto)
+        public async Task<ServiceResult> UpdateAsync(int id, CreateFilmDTO dto)
         {
             if (!_context.Zanrovi.Any(z => z.Id == dto.ZanrId))
             {
@@ -176,7 +176,7 @@ namespace MainProjectOOPIII3.Services.Film
             await _context.SaveChangesAsync();
             return ServiceResult.Ok();
         }
-        public async Task<ServiceResult> DeleteFilmAsync(int id)
+        public async Task<ServiceResult> DeleteAsync(int id)
         {
             var film = await _context.Filmovi.FindAsync(id);
 

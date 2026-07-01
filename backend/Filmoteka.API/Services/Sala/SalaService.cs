@@ -14,7 +14,7 @@ namespace Filmoteka.API.Services.Sala
             _context = context;
         }
 
-        public async Task<ServiceResult<int>> CreateSalaAsync(CreateSalaDTO sala)
+        public async Task<ServiceResult<int>> CreateAsync(CreateSalaDTO sala)
         {
             if (_context.Salas.Any(s => s.Naziv == sala.Naziv))
             {
@@ -34,7 +34,7 @@ namespace Filmoteka.API.Services.Sala
             return ServiceResult<int>.Ok(newSala.Id, "Sala je uspešno kreirana.");
         }
 
-        public async Task<ServiceResult> DeleteSalaAsync(int id)
+        public async Task<ServiceResult> DeleteAsync(int id)
         {
             var sala = await _context.Salas.FindAsync(id);
 
@@ -45,7 +45,7 @@ namespace Filmoteka.API.Services.Sala
 
             var termin = await _context.Termini.FirstOrDefaultAsync(t => t.SalaId == id);
 
-            if (termin == null)
+            if (termin != null)
             {
                 return ServiceResult.Greska("Sala se ne može obrisati jer je povezana sa terminom.");
             }
@@ -55,13 +55,13 @@ namespace Filmoteka.API.Services.Sala
             return ServiceResult.Ok("Sala je uspešno obrisana.");
         }
 
-        public async Task<ServiceResult<List<Models.Sala>>> GetSaleAsync()
+        public async Task<ServiceResult<List<Models.Sala>>> GetAllAsync()
         {
             var sale = await _context.Salas.ToListAsync();
             return ServiceResult<List<Models.Sala>>.Ok(sale);
         }
 
-        public async Task<ServiceResult<Models.Sala>> GetSalaByIdAsync(int id)
+        public async Task<ServiceResult<Models.Sala>> GetByIdAsync(int id)
         {
             var sala = await _context.Salas.FindAsync(id);
             return ServiceResult<Models.Sala>.Ok(sala);

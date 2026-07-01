@@ -1,5 +1,4 @@
 import { FC, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { register } from '../api/authApi';
 import { AuthCard } from '../components/AuthCard';
 import { FormInput } from '../components/FormInput';
@@ -7,11 +6,9 @@ import { saveAuth } from '../utils/storage';
 import { ROUTES } from '../constants/routes';
 import { Register as RegisterType } from '../types/auth';
 import toast from 'react-hot-toast';
-import axios from 'axios';
 import { getErrorMessage } from '../utils/errorUtils';
 
 export const Register: FC = () => {
-    const navigate = useNavigate();
     const [form, setForm] = useState<RegisterType>({ username: '', email: '', password: '' });
     const [loading, setLoading] = useState(false);
 

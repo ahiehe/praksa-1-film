@@ -42,6 +42,10 @@ namespace Filmoteka.API.Services.Zanr
 
         public async Task<ServiceResult> DeleteAsync(int id)
         {
+            bool imaFilmova = await _context.Filmovi.AnyAsync(f => f.ZanrId == id);
+            if (imaFilmova)
+                return ServiceResult.Greska("Ne možete obrisati žanr koji ima filmove.");
+
             var Zanr = await _context.Zanrovi.FindAsync(id);
             if (Zanr == null) return ServiceResult.Greska("Zanr nije pronađen.");
 

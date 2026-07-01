@@ -23,8 +23,8 @@ export const Layout: FC = () => {
                                 Projekcije
                             </Link>
                             {isAdmin &&
-                                <Link to={ROUTES.SALA_CREATE} className="text-slate-300 hover:text-white transition-colors">
-                                    Napravi salu
+                                <Link to={ROUTES.ADMIN_PANEL} className="text-slate-300 hover:text-white transition-colors">
+                                    Admin panel
                                 </Link>
                             }
                         </div>
