@@ -43,7 +43,7 @@ namespace MainProjectOOPIII3.Services.Account
                 return ServiceResult<AuthResponseDTO>.Greska("Email adresa je već zauzeta.");
             }
 
-            User newUser = new User
+            User newUser = new praktika1.Models.User
             {
                 Username = model.Username,
                 Email = model.Email,

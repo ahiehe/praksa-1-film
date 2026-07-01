@@ -1,5 +1,6 @@
 import { Film } from "./film";
 import { TipSale } from "./sala";
+import { Role } from "./user";
 
 export interface CreateFilmDTO {
     naziv: string;
@@ -53,4 +54,18 @@ export interface CreateReziserDTO {
 
 export interface CreateZanrDTO {
     naziv: string;
+}
+
+export interface CreateUserDTO {
+    username: string;
+    email: string;
+    password: string;
+    role: Role;
+}
+
+export interface UpdateUserDTO {
+    username?: string;
+    email?: string;
+    password?: string;
+    role?: Role;
 }

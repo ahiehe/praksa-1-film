@@ -20,4 +20,9 @@ export const ROUTES = {
 
     SALA_LIST: "/sale",
     SALA_CREATE: '/sale/create',
+
+    USER_LIST: "/user",
+    USER_EDIT: (id: number | string) => `/user/edit/${id}`,
+    USER_EDIT_PATTERN: `/user/edit/:id`,
+
 } as const;

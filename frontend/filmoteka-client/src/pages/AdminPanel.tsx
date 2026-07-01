@@ -36,6 +36,11 @@ export const AdminPanel: FC = () => {
                     to={ROUTES.TERMINI}
                 />
                 <AdminCard
+                    title="Korisnici"
+                    description="Upravljaj listom korisnika"
+                    to={ROUTES.USER_LIST}
+                />
+                <AdminCard
                     title="Sale"
                     description="Dodaj ili obriši bioskopske sale"
                     to={ROUTES.SALA_LIST}

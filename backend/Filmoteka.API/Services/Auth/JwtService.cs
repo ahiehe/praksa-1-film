@@ -15,7 +15,7 @@ namespace Filmoteka.API.Services.Auth
             _config = config;
         }
 
-        public string GenerateToken(User user)
+        public string GenerateToken(praktika1.Models.User user)
         {
             var claims = new[]
             {

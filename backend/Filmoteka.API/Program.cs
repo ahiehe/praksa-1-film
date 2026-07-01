@@ -2,6 +2,7 @@ using Filmoteka.API.Services.Auth;
 using Filmoteka.API.Services.Reziser;
 using Filmoteka.API.Services.Sala;
 using Filmoteka.API.Services.Termin;
+using Filmoteka.API.Services.User;
 using Filmoteka.API.Services.Zanr;
 using MainProjectOOPIII3.Services.Account;
 using MainProjectOOPIII3.Services.Film;
@@ -32,6 +33,7 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IReziserService, ReziserService>();
 builder.Services.AddScoped<IZanrService, ZanrService>();
 builder.Services.AddScoped<ISalaService, SalaService>();
+builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ITerminService, TerminService>();
 builder.Services.AddScoped<JwtService>();
 

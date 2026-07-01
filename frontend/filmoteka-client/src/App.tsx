@@ -18,6 +18,8 @@ import { AdminPanel } from './pages/AdminPanel';
 import { SalaList } from './pages/SalaList';
 import { ReziserList } from './pages/ReziserList';
 import { ZanrList } from './pages/ZanrList';
+import { UserList } from './pages/UserList';
+import { UserEdit } from './pages/UserEdit';
 
 const router = createBrowserRouter([
     {
@@ -45,6 +47,8 @@ const router = createBrowserRouter([
                     { path: ROUTES.SALA_CREATE, element: <SalaCreate /> },
                     { path: ROUTES.REZISER_LIST, element: <ReziserList /> },
                     { path: ROUTES.ZANR_LIST, element: <ZanrList /> },
+                    { path: ROUTES.USER_LIST, element: <UserList /> },
+                    { path: ROUTES.USER_EDIT_PATTERN, element: <UserEdit /> },
                 ]
             },
             {
