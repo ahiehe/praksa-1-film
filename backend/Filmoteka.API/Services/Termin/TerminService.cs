@@ -134,15 +134,15 @@ namespace Filmoteka.API.Services.Termin
 
             if (await _context.Salas.FindAsync(termin.SalaId) == null)
             {
-                return ServiceResult<int>.Greska("Sala sa datim ID-jem ne postoji.");
+                return ServiceResult.Greska("Sala sa datim ID-jem ne postoji.");
             }
             if (await _context.Filmovi.FindAsync(termin.FilmId) == null)
             {
-                return ServiceResult<int>.Greska("Film sa datim ID-jem ne postoji.");
+                return ServiceResult.Greska("Film sa datim ID-jem ne postoji.");
             }
             if (termin.PocetakProjekcije >= termin.KrajProjekcije)
             {
-                return ServiceResult<int>.Greska("Pocetak projekcije mora biti pre kraja projekcije.");
+                return ServiceResult.Greska("Pocetak projekcije mora biti pre kraja projekcije.");
             }
 
             bool terminPostoje = await _context.Termini.AnyAsync(t => t.Id != id && t.SalaId == termin.SalaId &&
@@ -151,7 +151,7 @@ namespace Filmoteka.API.Services.Termin
 
             if (terminPostoje)
             {
-                return ServiceResult<int>.Greska("Termin se preklapa sa postojećim terminom u istoj sali.");
+                return ServiceResult.Greska("Termin se preklapa sa postojećim terminom u istoj sali.");
             }
 
             stariTermin.SalaId = termin.SalaId;

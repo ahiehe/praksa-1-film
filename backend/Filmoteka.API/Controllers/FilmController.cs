@@ -25,7 +25,7 @@ namespace praktika1.Controllers
         [HttpGet]
         public async Task<IActionResult> Index([FromQuery] FilmQueryDTO query)
         {
-            ServiceResult<PaginatedFilmsDTO> result = await _filmService.GetPaginatedFilmsAsync(query, 6);
+            ServiceResult<PaginatedFilmsDTO> result = await _filmService.GetPaginatedFilmsAsync(query, 9);
 
             return Ok(result.Podaci);
         }
@@ -93,8 +93,12 @@ namespace praktika1.Controllers
         [HttpDelete("delete/{id}")]
         public async Task<IActionResult> DeleteFilm(int id)
         {
-            
-            await _filmService.DeleteAsync(id);
+            ServiceResult result = await _filmService.DeleteAsync(id);
+
+            if (!result.Uspesno)
+            {
+                return NotFound(new { message = result.Poruka });
+            }
 
             return Ok(new { message = "Film je obrisan" });
         }

@@ -64,6 +64,10 @@ namespace Filmoteka.API.Services.Sala
         public async Task<ServiceResult<Models.Sala>> GetByIdAsync(int id)
         {
             var sala = await _context.Salas.FindAsync(id);
+            if (sala == null)
+            {
+                return ServiceResult<Models.Sala>.Greska("Sala sa ovim ID-jem ne postoji.");
+            }
             return ServiceResult<Models.Sala>.Ok(sala);
         }
 

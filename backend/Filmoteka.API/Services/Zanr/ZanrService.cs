@@ -21,13 +21,23 @@ namespace Filmoteka.API.Services.Zanr
 
         public async Task<ServiceResult<int>> CreateAsync(CreateZanrDTO dto)
         {
+            if (string.IsNullOrWhiteSpace(dto.Naziv))
+            {
+                return ServiceResult<int>.Greska("Naziv žanra je obavezan.");
+            }
+
+            if (await _context.Zanrovi.AnyAsync(z => z.Naziv == dto.Naziv))
+            {
+                return ServiceResult<int>.Greska("Žanr sa ovim nazivom već postoji.");
+            }
+
             var Zanr = new praktika1.Models.Zanr
             {
                 Naziv = dto.Naziv
             };
             _context.Zanrovi.Add(Zanr);
             await _context.SaveChangesAsync();
-            return ServiceResult<int>.Ok(Zanr.Id);
+            return ServiceResult<int>.Ok(Zanr.Id, "Žanr je uspešno kreiran.");
         }
 
         public async Task<ServiceResult> UpdateAsync(int id, CreateZanrDTO dto)

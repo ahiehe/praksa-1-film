@@ -96,6 +96,12 @@ namespace Filmoteka.API.Services.User
                 return ServiceResult.Greska("Korisnik nije pronađen.");
             }
 
+            var existingUser = await _context.Users.FirstOrDefaultAsync(u => (u.Username == dto.Username || u.Email == dto.Email) && u.Id != id);
+            if (existingUser != null)
+            {
+                return ServiceResult.Greska("Korisnik sa istim korisničkim imenom ili email-om već postoji.");
+            }
+
             if (dto.Username != null) user.Username = dto.Username;
             if (dto.Email != null) user.Email = dto.Email;
             if (dto.Password != null) user.PasswordHash = HashPassword(dto.Password);
