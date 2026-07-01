@@ -37,6 +37,84 @@ namespace Filmoteka.API.Migrations
                     b.ToTable("FilmReziser");
                 });
 
+            modelBuilder.Entity("Filmoteka.API.Models.Filmoteka.API.Models.Rezervacija", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("TerminId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TerminId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Rezervacije");
+                });
+
+            modelBuilder.Entity("Filmoteka.API.Models.Sala", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("Kapacitet")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Naziv")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Tip")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Salas");
+                });
+
+            modelBuilder.Entity("Filmoteka.API.Models.Termin", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("BrojDostupnihMesta")
+                        .HasColumnType("int");
+
+                    b.Property<int>("FilmId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("KrajProjekcije")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("PocetakProjekcije")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("SalaId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FilmId");
+
+                    b.HasIndex("SalaId");
+
+                    b.ToTable("Termini");
+                });
+
             modelBuilder.Entity("praktika1.Models.Film", b =>
                 {
                     b.Property<int>("Id")
@@ -161,6 +239,44 @@ namespace Filmoteka.API.Migrations
                         .HasForeignKey("ReziseriId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Filmoteka.API.Models.Filmoteka.API.Models.Rezervacija", b =>
+                {
+                    b.HasOne("Filmoteka.API.Models.Termin", "Termin")
+                        .WithMany()
+                        .HasForeignKey("TerminId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("praktika1.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Termin");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Filmoteka.API.Models.Termin", b =>
+                {
+                    b.HasOne("praktika1.Models.Film", "Film")
+                        .WithMany()
+                        .HasForeignKey("FilmId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Filmoteka.API.Models.Sala", "Sala")
+                        .WithMany()
+                        .HasForeignKey("SalaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Film");
+
+                    b.Navigation("Sala");
                 });
 
             modelBuilder.Entity("praktika1.Models.Film", b =>

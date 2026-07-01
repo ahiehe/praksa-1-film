@@ -29,7 +29,7 @@ namespace MainProjectOOPIII3.Services.Account
             return _passwordHasher.VerifyHashedPassword(null, hash, password) == PasswordVerificationResult.Success;
         }
 
-        public async Task<ServiceResult<AuthResponseDTO>> RegisterAsync(RegisterValidationModel model)
+        public async Task<ServiceResult<AuthResponseDTO>> RegisterAsync(RegisterDTO model)
         {
             bool usernameExists = await _context.Users.AnyAsync(u => u.Username == model.Username);
             if (usernameExists)
@@ -43,7 +43,7 @@ namespace MainProjectOOPIII3.Services.Account
                 return ServiceResult<AuthResponseDTO>.Greska("Email adresa je već zauzeta.");
             }
 
-            User newUser = new User
+            User newUser = new praktika1.Models.User
             {
                 Username = model.Username,
                 Email = model.Email,
@@ -62,7 +62,7 @@ namespace MainProjectOOPIII3.Services.Account
             });
         }
 
-        public async Task<ServiceResult<AuthResponseDTO>> LoginAsync(LoginValidationModel model)
+        public async Task<ServiceResult<AuthResponseDTO>> LoginAsync(LoginDTO model)
         {
             User user = await _context.Users.FirstOrDefaultAsync(u => u.Username == model.UsernameOrEmail || u.Email == model.UsernameOrEmail);
 

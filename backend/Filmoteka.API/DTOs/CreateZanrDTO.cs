@@ -4,7 +4,7 @@ namespace Filmoteka.API.DTOs
 {
     public class CreateZanrDTO
     {
-        [Required]
+        [Required(ErrorMessage = "Naziv je obavezan")]
         public string Naziv { get; set; }
     }
 }

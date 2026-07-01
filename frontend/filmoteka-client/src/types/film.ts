@@ -1,20 +1,5 @@
-export interface Zanr {
-    id: number;
-    naziv: string;
-}
-
-export interface Reziser {
-    id: number;
-    ime: string;
-    prezime: string;
-    datumRodjenja: string;
-}
-
-export interface ReziserOption {
-    id: number;
-    ime: string;
-    prezime: string;
-}
+import { Reziser } from "./reziser";
+import { Zanr } from "./zanr";
 
 export interface Film {
     id: number;
@@ -26,4 +11,9 @@ export interface Film {
     reziseri: Reziser[];
     pocetakPrikazivanja?: string;
     krajPrikazivanja?: string;
+}
+
+export interface FilmOption {
+    id: number;
+    naziv: string;
 }

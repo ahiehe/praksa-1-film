@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Filmoteka.API.Models;
+using Filmoteka.API.Models.Filmoteka.API.Models;
+using Microsoft.EntityFrameworkCore;
 using praktika1.Models;
 
 namespace praktika1.Data
@@ -10,5 +12,9 @@ namespace praktika1.Data
         public DbSet<Zanr> Zanrovi { get; set; }
         public DbSet<Reziser> Reziseri { get; set; }
         public DbSet<User> Users { get; set; }
-        }
+        public DbSet<Sala> Salas { get; set; }
+        public DbSet<Termin> Termini { get; set; }
+        public DbSet<Rezervacija> Rezervacije { get; set; }
+
+    }
 }

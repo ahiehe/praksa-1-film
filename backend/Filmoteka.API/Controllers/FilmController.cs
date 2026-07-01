@@ -30,19 +30,25 @@ namespace praktika1.Controllers
             return Ok(result.Podaci);
         }
 
+        [HttpGet("options")]
+        public async Task<IActionResult> GetFilmOptions()
+        {
+            ServiceResult<List<FilmOptionDTO>> result = await _filmService.GetOptionsAsync();
+            return Ok(result.Podaci);
+        }
+
 
         [HttpGet("{id}")]
         public async Task<IActionResult> DetailsFilm(int id)
         {
-            ServiceResult<Film> result = await _filmService.GetFilmByIdAsync(id);
-            Film film = result.Podaci;
+            ServiceResult<Film> result = await _filmService.GetByIdAsync(id);
 
-            if (film == null)
+            if (!result.Uspesno)
             {
                 return NotFound();
             }
 
-            return Ok(film);
+            return Ok(result.Podaci);
         }
 
         [Authorize(Roles = "Admin")]
@@ -54,21 +60,10 @@ namespace praktika1.Controllers
                 return BadRequest(ModelState);
             }
 
-            var film = new Film
-            {
-                Naziv = dto.Naziv,
-                GodinaIzdanja = dto.GodinaIzdanja,
-                ZanrId = dto.ZanrId,
-                Opis = dto.Opis,
-                PocetakPrikazivanja = dto.PocetakPrikazivanja,
-                KrajPrikazivanja = dto.KrajPrikazivanja
-            };
-
-
-            ServiceResult<int> result = await _filmService.CreateFilmAsync(film, dto.IzabraniReziseri);
+            ServiceResult<int> result = await _filmService.CreateAsync(dto);
             if (result.Uspesno)
             {
-                return Ok( new { id = film.Id });
+                return Ok( new { id = result.Podaci });
             }
 
             return BadRequest(new { message = result.Poruka });
@@ -82,18 +77,9 @@ namespace praktika1.Controllers
             {
                 return BadRequest(ModelState);
             }
+            
 
-            var film = new Film
-            {
-                Naziv = dto.Naziv,
-                GodinaIzdanja = dto.GodinaIzdanja,
-                ZanrId = dto.ZanrId,
-                Opis = dto.Opis,
-                PocetakPrikazivanja = dto.PocetakPrikazivanja,
-                KrajPrikazivanja = dto.KrajPrikazivanja
-            };
-
-            ServiceResult result = await _filmService.UpdateFilmAsync(id, film, dto.IzabraniReziseri);
+            ServiceResult result = await _filmService.UpdateAsync(id, dto);
 
             if (result.Uspesno)
             {
@@ -108,25 +94,9 @@ namespace praktika1.Controllers
         public async Task<IActionResult> DeleteFilm(int id)
         {
             
-            await _filmService.DeleteFilmAsync(id);
+            await _filmService.DeleteAsync(id);
 
             return Ok(new { message = "Film je obrisan" });
         }
-
-        [HttpGet("zanrovi")]
-        public async Task<IActionResult> GetZanrovi()
-        {
-            var result = await _filmService.GetZanroviAsync();
-
-            return Ok(result.Podaci);
-        }
-
-        [HttpGet("reziseri")]
-        public async Task<IActionResult> GetReziseri()
-        {
-            var result = await _filmService.GetReziseriAsync();
-            return Ok(result.Podaci);
-        }
-
     }
 }

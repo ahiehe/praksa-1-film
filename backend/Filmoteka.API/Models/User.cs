@@ -5,6 +5,7 @@ namespace praktika1.Models
     public enum Role
     {
         Admin,
+        Employee,
         User
     }
 

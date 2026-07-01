@@ -108,7 +108,7 @@ export const FilmDetails: FC = () => {
                             <div key={r.id} className="flex items-center justify-between bg-slate-700/50 px-4 py-2.5 rounded-md">
                                 <span className="text-slate-200 text-sm">{r.ime} {r.prezime}</span>
                                 <span className="text-slate-500 text-xs">
-                                    {new Date(r.datumRodjenja).toLocaleDateString('sr-RS')}
+                                    {r.datumRodjenja ? new Date(r.datumRodjenja).toLocaleDateString('sr-RS') : "Nema godine rodjenja"}
                                 </span>
                             </div>
                         ))}
