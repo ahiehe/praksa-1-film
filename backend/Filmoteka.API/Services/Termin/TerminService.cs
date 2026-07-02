@@ -1,5 +1,6 @@
 ﻿using Filmoteka.API.DTOs;
 using Filmoteka.API.Models;
+using Filmoteka.API.Services.Email;
 using MainProjectOOPIII3.Services;
 using Microsoft.EntityFrameworkCore;
 using praktika1.Data;
@@ -9,10 +10,14 @@ namespace Filmoteka.API.Services.Termin
     public class TerminService : ITerminService
     {
         private readonly MyAppContext _context;
+        private readonly IEmailService _emailService;
+        private readonly ILogger<TerminService> _logger;
 
-        public TerminService(MyAppContext context)
+        public TerminService(MyAppContext context, IEmailService emailService, ILogger<TerminService> logger)
         {
             _context = context;
+            _emailService = emailService;
+            _logger = logger;
         }
 
         public async Task<ServiceResult<int>> CreateAsync(CreateTerminDTO termin)
@@ -56,15 +61,47 @@ namespace Filmoteka.API.Services.Termin
 
         public async Task<ServiceResult> DeleteAsync(int id)
         {
-            var termin = await _context.Termini.FindAsync(id);
+            var termin = await _context.Termini
+                .Include(t => t.Film)
+                .Include(t => t.Sala)
+                .FirstOrDefaultAsync(t => t.Id == id);
+
             if (termin == null)
-            {
                 return ServiceResult.Greska("Termin nije pronađen.");
+
+            var rezervacije = await _context.Rezervacije
+                .Include(r => r.User)
+                .Where(r => r.TerminId == id)
+                .ToListAsync();
+
+            foreach (var rezervacija in rezervacije)
+            {
+                try
+                {
+                    await _emailService.SendAsync(
+                        rezervacija.User.Email,
+                        $"Otkazana projekcija: {termin.Film.Naziv}",
+                        $@"
+                            <h2>Obaveštenje o otkazanoj projekciji</h2>
+                            <p>Poštovani {rezervacija.User.Username},</p>
+                            <p>Nažalost, projekcija na kojoj ste imali rezervaciju je otkazana:</p>
+                            <ul>
+                                <li><strong>Film:</strong> {termin.Film.Naziv}</li>
+                                <li><strong>Datum i vreme:</strong> {termin.PocetakProjekcije:dd.MM.yyyy HH:mm}</li>
+                                <li><strong>Sala:</strong> {termin.Sala.Naziv}</li>
+                            </ul>
+                            <p>Izvinjavamo se na neprijatnosti.</p>
+                        "
+                    );
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, $"Greška pri slanju emaila korisniku {rezervacija.User.Email}");
+                }
             }
 
             _context.Termini.Remove(termin);
             await _context.SaveChangesAsync();
-
             return ServiceResult.Ok("Termin uspešno obrisan.");
         }
 
