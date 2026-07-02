@@ -30,6 +30,8 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddDbContext<MyAppContext>(options =>
     options.UseSqlServer(connectionString));
 
+builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("Email"));
+
 builder.Services.AddScoped<IFilmService, FilmService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IReziserService, ReziserService>();
@@ -39,8 +41,7 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ITerminService, TerminService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<JwtService>();
-
-builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("Email"));
+builder.Services.AddHostedService<RezervacijaReminderService>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
