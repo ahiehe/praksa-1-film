@@ -1,5 +1,4 @@
 ﻿using Filmoteka.API.Models;
-using Filmoteka.API.Models.Filmoteka.API.Models;
 using Microsoft.EntityFrameworkCore;
 using praktika1.Models;
 
