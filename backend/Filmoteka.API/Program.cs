@@ -1,9 +1,11 @@
 using Filmoteka.API.Services.Auth;
+using Filmoteka.API.Services.Email;
 using Filmoteka.API.Services.Reziser;
 using Filmoteka.API.Services.Sala;
 using Filmoteka.API.Services.Termin;
 using Filmoteka.API.Services.User;
 using Filmoteka.API.Services.Zanr;
+using Filmoteka.API.Settings;
 using MainProjectOOPIII3.Services.Account;
 using MainProjectOOPIII3.Services.Film;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -35,7 +37,10 @@ builder.Services.AddScoped<IZanrService, ZanrService>();
 builder.Services.AddScoped<ISalaService, SalaService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ITerminService, TerminService>();
+builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<JwtService>();
+
+builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("Email"));
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
