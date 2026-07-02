@@ -393,3 +393,4 @@ dist-ssr
 
 
 **/appsettings.json
+**/appsettings.Development.json

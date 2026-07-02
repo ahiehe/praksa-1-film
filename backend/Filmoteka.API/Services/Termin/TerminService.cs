@@ -1,6 +1,5 @@
 ﻿using Filmoteka.API.DTOs;
 using Filmoteka.API.Models;
-using Filmoteka.API.Models.Filmoteka.API.Models;
 using MainProjectOOPIII3.Services;
 using Microsoft.EntityFrameworkCore;
 using praktika1.Data;
@@ -117,7 +116,7 @@ namespace Filmoteka.API.Services.Termin
                     KrajProjekcije = t.KrajProjekcije,
                     TipSale = t.Sala.Tip
                 })
-                .Where(t => t.PocetakProjekcije > DateTime.Now)
+                .Where(t => t.PocetakProjekcije > DateTime.Now && t.BrojDostupnihMesta > 0)
                 .ToListAsync();
 
             return ServiceResult<List<TerminInfoDTO>>.Ok(termini);
